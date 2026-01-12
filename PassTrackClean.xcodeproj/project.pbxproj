@@ -6,8 +6,53 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		AD3797542F10A8B800D91F92 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797482F10A3EF00D91F92 /* AppSettings.swift */; };
+		AD3797552F10A8B800D91F92 /* Rally.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797472F10A3DE00D91F92 /* Rally.swift */; };
+		AD3797562F10A8B800D91F92 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797492F10A47200D91F92 /* ContentView.swift */; };
+		AD3797572F10A8B800D91F92 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797462F10A3CA00D91F92 /* Session.swift */; };
+		AD3797582F10A8B800D91F92 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797432F10A36D00D91F92 /* DataStore.swift */; };
+		AD3797592F10A8B800D91F92 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797442F10A39F00D91F92 /* Team.swift */; };
+		AD37975A2F10A8B800D91F92 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797452F10A3B600D91F92 /* Player.swift */; };
+		AD37975B2F10A93B00D91F92 /* PassScoreButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797532F10A7CE00D91F92 /* PassScoreButtons.swift */; };
+		AD37975C2F10A93B00D91F92 /* PlayerTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797522F10A7B900D91F92 /* PlayerTile.swift */; };
+		AD37975D2F10A93B00D91F92 /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797512F10A72000D91F92 /* ProgressView.swift */; };
+		AD37975E2F10A93B00D91F92 /* LogSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797502F10A6E800D91F92 /* LogSheetView.swift */; };
+		AD37975F2F10A93B00D91F92 /* PlayerGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD37974F2F10A67300D91F92 /* PlayerGridView.swift */; };
+		AD3797602F10A93B00D91F92 /* ConfigureFieldsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD37974E2F10A65400D91F92 /* ConfigureFieldsView.swift */; };
+		AD3797612F10A93B00D91F92 /* SelectPassersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD37974D2F10A5A000D91F92 /* SelectPassersView.swift */; };
+		AD3797622F10A93B00D91F92 /* AddPlayerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD37974C2F10A58600D91F92 /* AddPlayerSheet.swift */; };
+		AD3797632F10A93B00D91F92 /* CreateTeamSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD37974B2F10A56000D91F92 /* CreateTeamSheet.swift */; };
+		AD3797642F10A93B00D91F92 /* TeamsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD37974A2F10A54700D91F92 /* TeamsListView.swift */; };
+		AD3797662F15492800D91F92 /* LiveTrackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797652F15492200D91F92 /* LiveTrackView.swift */; };
+		AD3797682F15526B00D91F92 /* LiveSessionGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797672F15526300D91F92 /* LiveSessionGridView.swift */; };
+		AD37976A2F15842300D91F92 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797692F15841C00D91F92 /* SettingsView.swift */; };
+		AD37976C2F159FF500D91F92 /* SessionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD37976B2F159FEE00D91F92 /* SessionDetailView.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		AD37972D2F10A27800D91F92 /* PassTrackClean.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PassTrackClean.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AD3797432F10A36D00D91F92 /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
+		AD3797442F10A39F00D91F92 /* Team.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
+		AD3797452F10A3B600D91F92 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		AD3797462F10A3CA00D91F92 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
+		AD3797472F10A3DE00D91F92 /* Rally.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rally.swift; sourceTree = "<group>"; };
+		AD3797482F10A3EF00D91F92 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		AD3797492F10A47200D91F92 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		AD37974A2F10A54700D91F92 /* TeamsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamsListView.swift; sourceTree = "<group>"; };
+		AD37974B2F10A56000D91F92 /* CreateTeamSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTeamSheet.swift; sourceTree = "<group>"; };
+		AD37974C2F10A58600D91F92 /* AddPlayerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlayerSheet.swift; sourceTree = "<group>"; };
+		AD37974D2F10A5A000D91F92 /* SelectPassersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPassersView.swift; sourceTree = "<group>"; };
+		AD37974E2F10A65400D91F92 /* ConfigureFieldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureFieldsView.swift; sourceTree = "<group>"; };
+		AD37974F2F10A67300D91F92 /* PlayerGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerGridView.swift; sourceTree = "<group>"; };
+		AD3797502F10A6E800D91F92 /* LogSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogSheetView.swift; sourceTree = "<group>"; };
+		AD3797512F10A72000D91F92 /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
+		AD3797522F10A7B900D91F92 /* PlayerTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTile.swift; sourceTree = "<group>"; };
+		AD3797532F10A7CE00D91F92 /* PassScoreButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassScoreButtons.swift; sourceTree = "<group>"; };
+		AD3797652F15492200D91F92 /* LiveTrackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveTrackView.swift; sourceTree = "<group>"; };
+		AD3797672F15526300D91F92 /* LiveSessionGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveSessionGridView.swift; sourceTree = "<group>"; };
+		AD3797692F15841C00D91F92 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		AD37976B2F159FEE00D91F92 /* SessionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -32,8 +77,11 @@
 		AD3797242F10A27800D91F92 = {
 			isa = PBXGroup;
 			children = (
-				AD37972F2F10A27800D91F92 /* PassTrackClean */,
+				AD3797422F10A33600D91F92 /* Components */,
+				AD37973E2F10A31F00D91F92 /* Views */,
+				AD37973C2F10A30900D91F92 /* Data */,
 				AD37972E2F10A27800D91F92 /* Products */,
+				AD37972F2F10A27800D91F92 /* PassTrackClean */,
 			);
 			sourceTree = "<group>";
 		};
@@ -43,6 +91,80 @@
 				AD37972D2F10A27800D91F92 /* PassTrackClean.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		AD37973C2F10A30900D91F92 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				AD3797432F10A36D00D91F92 /* DataStore.swift */,
+				AD37973D2F10A31600D91F92 /* Models */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		AD37973D2F10A31600D91F92 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AD3797482F10A3EF00D91F92 /* AppSettings.swift */,
+				AD3797472F10A3DE00D91F92 /* Rally.swift */,
+				AD3797462F10A3CA00D91F92 /* Session.swift */,
+				AD3797452F10A3B600D91F92 /* Player.swift */,
+				AD3797442F10A39F00D91F92 /* Team.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		AD37973E2F10A31F00D91F92 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AD3797692F15841C00D91F92 /* SettingsView.swift */,
+				AD3797652F15492200D91F92 /* LiveTrackView.swift */,
+				AD3797492F10A47200D91F92 /* ContentView.swift */,
+				AD3797402F10A32900D91F92 /* Session */,
+				AD37973F2F10A32400D91F92 /* Teams */,
+				AD3797412F10A32E00D91F92 /* Progress */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		AD37973F2F10A32400D91F92 /* Teams */ = {
+			isa = PBXGroup;
+			children = (
+				AD37974C2F10A58600D91F92 /* AddPlayerSheet.swift */,
+				AD37974B2F10A56000D91F92 /* CreateTeamSheet.swift */,
+				AD37974A2F10A54700D91F92 /* TeamsListView.swift */,
+			);
+			path = Teams;
+			sourceTree = "<group>";
+		};
+		AD3797402F10A32900D91F92 /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				AD37976B2F159FEE00D91F92 /* SessionDetailView.swift */,
+				AD3797672F15526300D91F92 /* LiveSessionGridView.swift */,
+				AD3797502F10A6E800D91F92 /* LogSheetView.swift */,
+				AD37974F2F10A67300D91F92 /* PlayerGridView.swift */,
+				AD37974E2F10A65400D91F92 /* ConfigureFieldsView.swift */,
+				AD37974D2F10A5A000D91F92 /* SelectPassersView.swift */,
+			);
+			path = Session;
+			sourceTree = "<group>";
+		};
+		AD3797412F10A32E00D91F92 /* Progress */ = {
+			isa = PBXGroup;
+			children = (
+				AD3797512F10A72000D91F92 /* ProgressView.swift */,
+			);
+			path = Progress;
+			sourceTree = "<group>";
+		};
+		AD3797422F10A33600D91F92 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				AD3797532F10A7CE00D91F92 /* PassScoreButtons.swift */,
+				AD3797522F10A7B900D91F92 /* PlayerTile.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -119,6 +241,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD37976A2F15842300D91F92 /* SettingsView.swift in Sources */,
+				AD37975B2F10A93B00D91F92 /* PassScoreButtons.swift in Sources */,
+				AD37975C2F10A93B00D91F92 /* PlayerTile.swift in Sources */,
+				AD37975D2F10A93B00D91F92 /* ProgressView.swift in Sources */,
+				AD37975E2F10A93B00D91F92 /* LogSheetView.swift in Sources */,
+				AD37975F2F10A93B00D91F92 /* PlayerGridView.swift in Sources */,
+				AD3797682F15526B00D91F92 /* LiveSessionGridView.swift in Sources */,
+				AD3797602F10A93B00D91F92 /* ConfigureFieldsView.swift in Sources */,
+				AD37976C2F159FF500D91F92 /* SessionDetailView.swift in Sources */,
+				AD3797612F10A93B00D91F92 /* SelectPassersView.swift in Sources */,
+				AD3797662F15492800D91F92 /* LiveTrackView.swift in Sources */,
+				AD3797622F10A93B00D91F92 /* AddPlayerSheet.swift in Sources */,
+				AD3797632F10A93B00D91F92 /* CreateTeamSheet.swift in Sources */,
+				AD3797642F10A93B00D91F92 /* TeamsListView.swift in Sources */,
+				AD3797542F10A8B800D91F92 /* AppSettings.swift in Sources */,
+				AD3797552F10A8B800D91F92 /* Rally.swift in Sources */,
+				AD3797562F10A8B800D91F92 /* ContentView.swift in Sources */,
+				AD3797572F10A8B800D91F92 /* Session.swift in Sources */,
+				AD3797582F10A8B800D91F92 /* DataStore.swift in Sources */,
+				AD3797592F10A8B800D91F92 /* Team.swift in Sources */,
+				AD37975A2F10A8B800D91F92 /* Player.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
