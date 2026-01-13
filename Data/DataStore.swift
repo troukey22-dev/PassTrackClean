@@ -12,6 +12,8 @@ import SwiftData
 @Observable
 class DataStore {
     var currentSession: Session?
+    var currentSessionPassers: [Player] = []
+    var refreshTrigger: Int = 0
     var settings = AppSettings()
     
     // Reference to SwiftData context
@@ -43,10 +45,17 @@ class DataStore {
     }
     
     func deleteTeam(_ team: Team) {
-        guard let context = modelContext else { return }
-        context.delete(team)
-        saveContext()
-    }
+            guard let context = modelContext else { return }
+            
+            // Delete all players in the team (cascade should handle this, but let's be explicit)
+            for player in team.players {
+                context.delete(player)
+            }
+            
+            // Delete the team
+            context.delete(team)
+            saveContext()
+        }
     
     func addPlayer(to team: Team, player: Player) {
         guard let context = modelContext else { return }
@@ -64,29 +73,41 @@ class DataStore {
     // MARK: - Session Management
     
     func startSession(team: Team, passers: [Player], enabledFields: [String: Bool]) {
-        guard let context = modelContext else { return }
-        
-        // End any existing session first
-        if let existing = currentSession {
-            completeSession()
+            guard let _ = modelContext else {
+                print("❌ ERROR: No modelContext")
+                return
+            }
+            
+            print("🎯 Starting session for team: \(team.name)")
+            print("🎯 Passers count: \(passers.count)")
+            print("🎯 Passer names: \(passers.map { $0.name })")
+            
+            // End any existing session first
+                if currentSession != nil {
+                completeSession()
+            }
+            
+            // Create new session
+            let session = Session(
+                teamId: team.id,
+                teamName: team.name,
+                passerIds: passers.map { $0.id },
+                trackZone: enabledFields["zone"] ?? false,
+                trackContactType: enabledFields["contactType"] ?? false,
+                trackContactLocation: enabledFields["contactLocation"] ?? false,
+                trackServeType: enabledFields["serveType"] ?? false
+            )
+            
+            currentSession = session
+            print("✅ Session created: \(session.teamName)")
+            
+            // Reset stats for all passers
+            passers.forEach { $0.resetStats() }
+            
+            // IMPORTANT: Store the EXACT same player instances
+            currentSessionPassers = passers
+            print("✅ Stored \(currentSessionPassers.count) passers in currentSessionPassers")
         }
-        
-        // Create new session
-        let session = Session(
-            teamId: team.id,
-            teamName: team.name,
-            passerIds: passers.map { $0.id },
-            trackZone: enabledFields["zone"] ?? false,
-            trackContactType: enabledFields["contactType"] ?? false,
-            trackContactLocation: enabledFields["contactLocation"] ?? false,
-            trackServeType: enabledFields["serveType"] ?? false
-        )
-        
-        currentSession = session
-        
-        // Reset stats for all passers
-        passers.forEach { $0.resetStats() }
-    }
     
     func logPass(
         player: Player,
@@ -116,24 +137,24 @@ class DataStore {
         // Update player stats (in-memory, not persisted)
         player.passCount += 1
         player.totalScore += score
+        refreshTrigger += 1
     }
     
     func undoLastLog() {
-        guard let context = modelContext else { return }
-        guard let session = currentSession else { return }
-        guard let lastRally = session.rallies.last else { return }
-        
-        // Find the player who made this pass and update their stats
-        if let team = fetchTeam(byId: session.teamId) {
-            if let player = team.players.first(where: { $0.id == lastRally.playerId }) {
+            guard let context = modelContext else { return }
+            guard let session = currentSession else { return }
+            guard let lastRally = session.rallies.last else { return }
+            
+            // Find the player in currentSessionPassers (the SAME instances used in the UI)
+            if let player = currentSessionPassers.first(where: { $0.id == lastRally.playerId }) {
                 player.passCount -= 1
                 player.totalScore -= lastRally.passScore
+                refreshTrigger += 1
             }
+            
+            // Remove the rally
+            context.delete(lastRally)
         }
-        
-        // Remove the rally
-        context.delete(lastRally)
-    }
     
     func completeSession() {
         guard let context = modelContext else { return }
@@ -147,8 +168,9 @@ class DataStore {
         saveContext()
         
         // Clear current session
-        currentSession = nil
-    }
+                currentSession = nil
+                currentSessionPassers = []
+            }
     
     // MARK: - Fetch Methods
     

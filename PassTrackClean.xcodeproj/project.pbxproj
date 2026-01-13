@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AD2E0BDA2F167E4000779C4D /* SelectPassersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E0BD92F167E3900779C4D /* SelectPassersView.swift */; };
+		AD2E0BDC2F167E6F00779C4D /* ConfigureFieldsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E0BDB2F167E6900779C4D /* ConfigureFieldsView.swift */; };
 		AD3797542F10A8B800D91F92 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797482F10A3EF00D91F92 /* AppSettings.swift */; };
 		AD3797552F10A8B800D91F92 /* Rally.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797472F10A3DE00D91F92 /* Rally.swift */; };
 		AD3797562F10A8B800D91F92 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797492F10A47200D91F92 /* ContentView.swift */; };
@@ -19,8 +21,6 @@
 		AD37975D2F10A93B00D91F92 /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797512F10A72000D91F92 /* ProgressView.swift */; };
 		AD37975E2F10A93B00D91F92 /* LogSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797502F10A6E800D91F92 /* LogSheetView.swift */; };
 		AD37975F2F10A93B00D91F92 /* PlayerGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD37974F2F10A67300D91F92 /* PlayerGridView.swift */; };
-		AD3797602F10A93B00D91F92 /* ConfigureFieldsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD37974E2F10A65400D91F92 /* ConfigureFieldsView.swift */; };
-		AD3797612F10A93B00D91F92 /* SelectPassersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD37974D2F10A5A000D91F92 /* SelectPassersView.swift */; };
 		AD3797622F10A93B00D91F92 /* AddPlayerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD37974C2F10A58600D91F92 /* AddPlayerSheet.swift */; };
 		AD3797632F10A93B00D91F92 /* CreateTeamSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD37974B2F10A56000D91F92 /* CreateTeamSheet.swift */; };
 		AD3797642F10A93B00D91F92 /* TeamsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD37974A2F10A54700D91F92 /* TeamsListView.swift */; };
@@ -31,6 +31,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AD2E0BD92F167E3900779C4D /* SelectPassersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPassersView.swift; sourceTree = "<group>"; };
+		AD2E0BDB2F167E6900779C4D /* ConfigureFieldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureFieldsView.swift; sourceTree = "<group>"; };
 		AD37972D2F10A27800D91F92 /* PassTrackClean.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PassTrackClean.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD3797432F10A36D00D91F92 /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
 		AD3797442F10A39F00D91F92 /* Team.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
@@ -42,8 +44,6 @@
 		AD37974A2F10A54700D91F92 /* TeamsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamsListView.swift; sourceTree = "<group>"; };
 		AD37974B2F10A56000D91F92 /* CreateTeamSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTeamSheet.swift; sourceTree = "<group>"; };
 		AD37974C2F10A58600D91F92 /* AddPlayerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlayerSheet.swift; sourceTree = "<group>"; };
-		AD37974D2F10A5A000D91F92 /* SelectPassersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPassersView.swift; sourceTree = "<group>"; };
-		AD37974E2F10A65400D91F92 /* ConfigureFieldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureFieldsView.swift; sourceTree = "<group>"; };
 		AD37974F2F10A67300D91F92 /* PlayerGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerGridView.swift; sourceTree = "<group>"; };
 		AD3797502F10A6E800D91F92 /* LogSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogSheetView.swift; sourceTree = "<group>"; };
 		AD3797512F10A72000D91F92 /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
@@ -117,6 +117,8 @@
 		AD37973E2F10A31F00D91F92 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				AD2E0BDB2F167E6900779C4D /* ConfigureFieldsView.swift */,
+				AD2E0BD92F167E3900779C4D /* SelectPassersView.swift */,
 				AD3797692F15841C00D91F92 /* SettingsView.swift */,
 				AD3797652F15492200D91F92 /* LiveTrackView.swift */,
 				AD3797492F10A47200D91F92 /* ContentView.swift */,
@@ -144,8 +146,6 @@
 				AD3797672F15526300D91F92 /* LiveSessionGridView.swift */,
 				AD3797502F10A6E800D91F92 /* LogSheetView.swift */,
 				AD37974F2F10A67300D91F92 /* PlayerGridView.swift */,
-				AD37974E2F10A65400D91F92 /* ConfigureFieldsView.swift */,
-				AD37974D2F10A5A000D91F92 /* SelectPassersView.swift */,
 			);
 			path = Session;
 			sourceTree = "<group>";
@@ -241,6 +241,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD2E0BDA2F167E4000779C4D /* SelectPassersView.swift in Sources */,
 				AD37976A2F15842300D91F92 /* SettingsView.swift in Sources */,
 				AD37975B2F10A93B00D91F92 /* PassScoreButtons.swift in Sources */,
 				AD37975C2F10A93B00D91F92 /* PlayerTile.swift in Sources */,
@@ -248,9 +249,7 @@
 				AD37975E2F10A93B00D91F92 /* LogSheetView.swift in Sources */,
 				AD37975F2F10A93B00D91F92 /* PlayerGridView.swift in Sources */,
 				AD3797682F15526B00D91F92 /* LiveSessionGridView.swift in Sources */,
-				AD3797602F10A93B00D91F92 /* ConfigureFieldsView.swift in Sources */,
 				AD37976C2F159FF500D91F92 /* SessionDetailView.swift in Sources */,
-				AD3797612F10A93B00D91F92 /* SelectPassersView.swift in Sources */,
 				AD3797662F15492800D91F92 /* LiveTrackView.swift in Sources */,
 				AD3797622F10A93B00D91F92 /* AddPlayerSheet.swift in Sources */,
 				AD3797632F10A93B00D91F92 /* CreateTeamSheet.swift in Sources */,
@@ -261,6 +260,7 @@
 				AD3797572F10A8B800D91F92 /* Session.swift in Sources */,
 				AD3797582F10A8B800D91F92 /* DataStore.swift in Sources */,
 				AD3797592F10A8B800D91F92 /* Team.swift in Sources */,
+				AD2E0BDC2F167E6F00779C4D /* ConfigureFieldsView.swift in Sources */,
 				AD37975A2F10A8B800D91F92 /* Player.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

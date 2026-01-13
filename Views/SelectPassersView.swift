@@ -32,7 +32,30 @@ struct SelectPassersView: View {
                 // Player list
                 List {
                     ForEach(team.players) { player in
-                        PlayerToggleRow(player: player)
+                        Button {
+                            withAnimation(.spring(response: 0.3)) {
+                                player.isActive.toggle()
+                            }
+                        } label: {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(player.name)
+                                        .font(.body)
+                                        .fontWeight(.semibold)
+                                    Text("#\(player.number) • \(player.position ?? "Player")")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                                
+                                Spacer()
+                                
+                                Image(systemName: player.isActive ? "checkmark.circle.fill" : "circle")
+                                    .foregroundStyle(player.isActive ? .green : .secondary)
+                                    .font(.title3)
+                            }
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
                 
@@ -89,37 +112,5 @@ struct SelectPassersView: View {
     
     private func proceedToConfigureFields() {
         showingConfigureFields = true
-    }
-}
-
-// Separate row component that observes individual player
-struct PlayerToggleRow: View {
-    @Bindable var player: Player
-    
-    var body: some View {
-        Button {
-            withAnimation(.spring(response: 0.3)) {
-                player.isActive.toggle()
-            }
-        } label: {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(player.name)
-                        .font(.body)
-                        .fontWeight(.semibold)
-                    Text("#\(player.number) • \(player.position ?? "Player")")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                
-                Spacer()
-                
-                Image(systemName: player.isActive ? "checkmark.circle.fill" : "circle")
-                    .foregroundStyle(player.isActive ? .green : .secondary)
-                    .font(.title3)
-            }
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
     }
 }

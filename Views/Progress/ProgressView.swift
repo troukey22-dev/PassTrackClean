@@ -29,24 +29,40 @@ struct ProgressView: View {
     }
     
     private var emptyState: some View {
-        VStack(spacing: 20) {
-            Image(systemName: "chart.bar.fill")
-                .font(.system(size: 60))
+            VStack(spacing: 20) {
+                Spacer()
+                
+                Image(systemName: "chart.bar.fill")
+                    .font(.system(size: 60))
+                    .foregroundStyle(.blue)
+                
+                Text("No Sessions Yet")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                
+                Text("Start tracking a practice session to see detailed stats and player performance")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 40)
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    Label("Real-time pass tracking", systemImage: "clock.fill")
+                    Label("Individual player stats", systemImage: "person.fill")
+                    Label("Team performance trends", systemImage: "chart.line.uptrend.xyaxis")
+                }
+                .font(.caption)
                 .foregroundStyle(.secondary)
-            
-            Text("No Sessions Yet")
-                .font(.title2)
-                .fontWeight(.bold)
-            
-            Text("Start a session to see live stats and progress")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
+                .padding()
+                .background(Color(.secondarySystemBackground))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
                 .padding(.horizontal, 40)
+                
+                Spacer()
+            }
+            .frame(maxHeight: .infinity)
+            .padding()
         }
-        .frame(maxHeight: .infinity)
-        .padding()
-    }
     
     private var recentSessionsList: some View {
         VStack(alignment: .leading, spacing: 16) {

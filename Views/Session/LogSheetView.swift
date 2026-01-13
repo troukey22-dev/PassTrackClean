@@ -20,54 +20,54 @@ struct LogSheetView: View {
     @State private var selectedServeType: String? = nil
     
     var body: some View {
-            NavigationStack {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 24) {
-                        // Player header
-                        playerHeader
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 24) {
+                    // Player header
+                    playerHeader
+                    
+                    // Pass Score (Required)
+                    passScoreSection
+                    
+                    // Optional fields (if enabled in current session)
+                    if let session = dataStore.currentSession {
+                        if session.trackZone {
+                            zoneSection
+                        }
                         
-                        // Pass Score (Required)
-                        passScoreSection
+                        if session.trackContactType {
+                            contactTypeSection
+                        }
                         
-                        // Optional fields (if enabled in current session)
-                        if let session = dataStore.currentSession {
-                            if session.trackZone {
-                                zoneSection
-                            }
-                            
-                            if session.trackContactType {
-                                contactTypeSection
-                            }
-                            
-                            if session.trackContactLocation {
-                                contactLocationSection
-                            }
-                            
-                            if session.trackServeType {
-                                serveTypeSection
-                            }
+                        if session.trackContactLocation {
+                            contactLocationSection
+                        }
+                        
+                        if session.trackServeType {
+                            serveTypeSection
                         }
                     }
-                    .padding()
                 }
-                .navigationTitle("Log Pass")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") {
-                            isPresented = false
-                        }
+                .padding()
+            }
+            .navigationTitle("Log Pass")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        isPresented = false
                     }
-                    ToolbarItem(placement: .primaryAction) {
-                        Button("Log") {
-                            logPass()
-                        }
-                        .fontWeight(.semibold)
-                        .disabled(selectedScore == nil)
+                }
+                ToolbarItem(placement: .primaryAction) {
+                    Button("Log") {
+                        logPass()
                     }
+                    .fontWeight(.semibold)
+                    .disabled(selectedScore == nil)
                 }
             }
         }
+    }
     
     // MARK: - Player Header
     private var playerHeader: some View {
@@ -273,8 +273,13 @@ struct LogSheetView: View {
     }
     
     // MARK: - Actions
+    // MARK: - Actions
     private func logPass() {
         guard let score = selectedScore else { return }
+        
+        // Haptic feedback
+        let impact = UIImpactFeedbackGenerator(style: .light)
+        impact.impactOccurred()
         
         dataStore.logPass(
             player: player,

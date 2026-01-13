@@ -6,13 +6,39 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct SettingsView: View {
     @Environment(DataStore.self) private var dataStore
+    @Query(sort: \Team.createdAt, order: .reverse) private var teams: [Team]
     
     var body: some View {
         NavigationStack {
             Form {
+                // Teams Section
+                  Section {
+                    NavigationLink {
+                        TeamsListView()
+                    } label: {
+                        HStack {
+                            Image(systemName: "person.3.fill")
+                                .foregroundStyle(.blue)
+                                .frame(width: 30)
+                            
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Manage Teams")
+                                    .font(.body)
+                                Text("\(teams.count) team\(teams.count == 1 ? "" : "s")")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                } header: {
+                    Text("Teams")
+                }
+                
+                // Scoring Section
                 Section {
                     Picker("Scoring System", selection: Binding(
                         get: { dataStore.settings.scoringSystem },
@@ -28,6 +54,7 @@ struct SettingsView: View {
                     Text("Current system uses 0-3 scale (Ace, Poor, Good, Perfect)")
                 }
                 
+                // Default Data Fields Section
                 Section {
                     Toggle("Zone Tracking", isOn: Binding(
                         get: { dataStore.settings.trackZone },
@@ -51,6 +78,7 @@ struct SettingsView: View {
                     Text("These fields can be enabled/disabled when starting each session")
                 }
                 
+                // Interface Section
                 Section {
                     Toggle("Haptic Feedback", isOn: Binding(
                         get: { dataStore.settings.enableHaptics },
@@ -64,10 +92,25 @@ struct SettingsView: View {
                     Text("Interface")
                 }
                 
+                // About Section
                 Section {
-                    Text("PassTrack v1.0")
-                        .foregroundStyle(.secondary)
-                    Text("Made for coaches who love data")
+                    HStack {
+                        Text("Version")
+                        Spacer()
+                        Text("1.0")
+                            .foregroundStyle(.secondary)
+                    }
+                    
+                    HStack {
+                        Text("Build")
+                        Spacer()
+                        Text("2026.01")
+                            .foregroundStyle(.secondary)
+                    }
+                } header: {
+                    Text("About")
+                } footer: {
+                    Text("PassTrack - Made for coaches who love data")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -80,4 +123,5 @@ struct SettingsView: View {
 #Preview {
     SettingsView()
         .environment(DataStore())
+        .modelContainer(for: [Team.self, Player.self, Session.self, Rally.self])
 }

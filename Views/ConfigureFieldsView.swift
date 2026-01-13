@@ -136,6 +136,10 @@ struct ConfigureFieldsView: View {
     }
     
     private func startSession() {
+        print("🔥 ConfigureFieldsView.startSession() called!")
+        print("🔥 Team: \(team.name)")
+        print("🔥 Passers: \(passers.map { $0.name })")
+        
         dataStore.startSession(
             team: team,
             passers: passers,
@@ -146,6 +150,10 @@ struct ConfigureFieldsView: View {
                 "serveType": enabledFields.contains("serveType")
             ]
         )
+        
+        print("🔥 After calling dataStore.startSession")
+        print("🔥 currentSession: \(dataStore.currentSession?.teamName ?? "nil")")
+        
         isPresented = false
         dismiss()
     }
