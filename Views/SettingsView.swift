@@ -79,18 +79,28 @@ struct SettingsView: View {
                 }
                 
                 // Interface Section
-                Section {
-                    Toggle("Haptic Feedback", isOn: Binding(
-                        get: { dataStore.settings.enableHaptics },
-                        set: { dataStore.settings.enableHaptics = $0 }
-                    ))
-                    Toggle("Show Player Photos", isOn: Binding(
-                        get: { dataStore.settings.showPlayerPhotos },
-                        set: { dataStore.settings.showPlayerPhotos = $0 }
-                    ))
-                } header: {
-                    Text("Interface")
-                }
+                                Section {
+                                    Picker("Grid Layout", selection: Binding(
+                                        get: { dataStore.settings.gridColumns },
+                                        set: { dataStore.settings.gridColumns = $0 }
+                                    )) {
+                                        Text("Standard (2 columns)").tag(2)
+                                        Text("Compact (3 columns)").tag(3)
+                                    }
+                                    
+                                    Toggle("Haptic Feedback", isOn: Binding(
+                                        get: { dataStore.settings.enableHaptics },
+                                        set: { dataStore.settings.enableHaptics = $0 }
+                                    ))
+                                    Toggle("Show Player Photos", isOn: Binding(
+                                        get: { dataStore.settings.showPlayerPhotos },
+                                        set: { dataStore.settings.showPlayerPhotos = $0 }
+                                    ))
+                                } header: {
+                                    Text("Interface")
+                                } footer: {
+                                    Text("Compact view fits more players on screen with smaller tiles")
+                                }
                 
                 // About Section
                 Section {

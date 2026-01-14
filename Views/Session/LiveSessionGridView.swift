@@ -25,12 +25,32 @@ struct LiveSessionGridView: View {
         ZStack {
             VStack(spacing: 0) {
                 if let session = dataStore.currentSession {
-                    let _ = print("✅ Rendering live session for: \(session.teamName), passers: \(passers.count)")
-                    // Header with timer
-                    sessionHeader(session: session)
-                        .padding()
-                        .background(Color(.systemGroupedBackground))
-                    
+                                    // Title header with End Session button
+                                    HStack {
+                                        Image(systemName: "volleyball.fill")
+                                            .font(.title2)
+                                            .foregroundStyle(.blue)
+                                        Text("Serve-Receive")
+                                            .font(.title2)
+                                            .fontWeight(.bold)
+                                        
+                                        Spacer()
+                                        
+                                        Button {
+                                            showingEndSession = true
+                                        } label: {
+                                            Text("End Session")
+                                                .font(.subheadline)
+                                                .fontWeight(.semibold)
+                                                .foregroundStyle(.red)
+                                        }
+                                    }
+                                    .padding(.horizontal)
+                                    .padding(.vertical, 12)
+                                    .background(Color(.systemBackground))
+                                    
+                                    // Header with timer
+                                    sessionHeader(session: session)                                    .background(Color(.systemBackground))
                     // Live tracking indicator
                     HStack {
                         Text("TEAM LIVE FEED")
@@ -50,13 +70,11 @@ struct LiveSessionGridView: View {
                     }
                     .padding(.horizontal)
                     .padding(.vertical, 8)
+                    .background(Color(.systemBackground))
                     
                     // Player grid
                     ScrollView {
-                        LazyVGrid(columns: [
-                            GridItem(.flexible()),
-                            GridItem(.flexible())
-                        ], spacing: 16) {
+                        LazyVGrid(columns: gridColumns, spacing: gridSpacing) {
                             ForEach(passers) { player in
                                 Button {
                                     // Haptic feedback on tile press
@@ -66,7 +84,7 @@ struct LiveSessionGridView: View {
                                     selectedPlayer = player
                                     showingLogSheet = true
                                 } label: {
-                                    LivePlayerTile(player: player)
+                                    LivePlayerTile(player: player, isCompact: dataStore.settings.gridColumns == 3)
                                 }
                                 .buttonStyle(ScaleButtonStyle())
                             }
@@ -74,6 +92,7 @@ struct LiveSessionGridView: View {
                         .id(dataStore.refreshTrigger)
                         .padding()
                     }
+                    .background(Color(.systemBackground))
                     
                     // Bottom bar with Undo
                     HStack(spacing: 12) {
@@ -81,16 +100,18 @@ struct LiveSessionGridView: View {
                             performUndo()
                         } label: {
                             Label("Undo Last Pass", systemImage: "arrow.uturn.backward")
-                                .font(.headline)
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
                                 .foregroundStyle(.white)
                                 .frame(maxWidth: .infinity)
-                                .padding()
+                                .padding(.vertical, 12)
                                 .background(session.rallyCount > 0 ? Color.orange : Color.gray)
                                 .clipShape(RoundedRectangle(cornerRadius: 12))
                         }
                         .disabled(session.rallyCount == 0)
                     }
-                    .padding()
+                    .padding(.horizontal)
+                    .padding(.vertical, 12)
                     .background(Color(.systemBackground))
                 }
             }
@@ -111,19 +132,10 @@ struct LiveSessionGridView: View {
                 .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
-        .navigationTitle("Serve-Receive")
+        .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-                    ToolbarItem(placement: .primaryAction) {
-                        Button {
-                            showingEndSession = true
-                        } label: {
-                            Text("End Session")
-                                .font(.subheadline)
-                                .fontWeight(.semibold)
-                                .foregroundStyle(.red)
-                        }
-                    }
+                    // Toolbar items removed - title and button now in content
                 }
         .sheet(isPresented: $showingLogSheet) {
             if let player = selectedPlayer {
@@ -153,15 +165,18 @@ struct LiveSessionGridView: View {
         }
     }
     
+    private var gridColumns: [GridItem] {
+        let columns = dataStore.settings.gridColumns
+        return Array(repeating: GridItem(.flexible()), count: columns)
+    }
+    
+    private var gridSpacing: CGFloat {
+        return dataStore.settings.gridColumns == 3 ? 12 : 16
+    }
+    
     private func loadPassers() {
-            print("🔍 loadPassers called")
-            print("🔍 currentSessionPassers count: \(dataStore.currentSessionPassers.count)")
-            
-            // Use the persistent player references from dataStore
-            passers = dataStore.currentSessionPassers
-            
-            print("🔍 Loaded passers: \(passers.map { "\($0.name) - \($0.number)" })")
-        }
+        passers = dataStore.currentSessionPassers
+    }
     
     private func performUndo() {
         guard let session = dataStore.currentSession else { return }
@@ -195,86 +210,83 @@ struct LiveSessionGridView: View {
     }
     
     private func sessionHeader(session: Session) -> some View {
-            VStack(spacing: 0) {
-                // Timer card with stats
-                VStack(spacing: 12) {
-                    // Timer
-                    HStack(spacing: 8) {
-                        VStack(spacing: 2) {
-                            Text(String(format: "%02d", Int(session.duration) / 60))
-                                .font(.system(size: 44, weight: .bold, design: .rounded))
-                                .foregroundStyle(.blue)
-                            Text("MIN")
-                                .font(.caption2)
-                                .fontWeight(.semibold)
-                                .foregroundStyle(.secondary)
-                        }
-                        
-                        Text(":")
+        VStack(spacing: 0) {
+            // Timer card with stats
+            VStack(spacing: 12) {
+                // Timer
+                HStack(spacing: 8) {
+                    VStack(spacing: 2) {
+                        Text(String(format: "%02d", Int(session.duration) / 60))
                             .font(.system(size: 44, weight: .bold, design: .rounded))
+                            .foregroundStyle(.blue)
+                        Text("MIN")
+                            .font(.caption2)
+                            .fontWeight(.semibold)
                             .foregroundStyle(.secondary)
-                            .padding(.bottom, 10)
-                        
-                        VStack(spacing: 2) {
-                            Text(String(format: "%02d", Int(session.duration) % 60))
-                                .font(.system(size: 44, weight: .bold, design: .rounded))
-                                .foregroundStyle(.blue)
-                            Text("SEC")
-                                .font(.caption2)
-                                .fontWeight(.semibold)
-                                .foregroundStyle(.secondary)
-                        }
                     }
-                    .monospacedDigit()
-                    .id(currentTime)
                     
-                    // Compact stats row - only show if passes logged
-                    if session.rallyCount > 0 {
-                        HStack(spacing: 24) {
-                            VStack(spacing: 2) {
-                                Text("\(session.rallyCount)")
-                                    .font(.headline)
-                                    .fontWeight(.bold)
-                                Text("Passes")
-                                    .font(.caption2)
-                                    .foregroundStyle(.secondary)
-                            }
-                            
-                            VStack(spacing: 2) {
-                                Text(String(format: "%.2f", session.teamAverage))
-                                    .font(.headline)
-                                    .fontWeight(.bold)
-                                    .foregroundStyle(teamAverageColor(session.teamAverage))
-                                Text("Avg Rating")
-                                    .font(.caption2)
-                                    .foregroundStyle(.secondary)
-                            }
-                            
-                            VStack(spacing: 2) {
-                                Text("\(Int(session.goodPassPercentage))%")
-                                    .font(.headline)
-                                    .fontWeight(.bold)
-                                Text("Good Pass")
-                                    .font(.caption2)
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
+                    Text(":")
+                        .font(.system(size: 44, weight: .bold, design: .rounded))
+                        .foregroundStyle(.secondary)
+                        .padding(.bottom, 10)
+                    
+                    VStack(spacing: 2) {
+                        Text(String(format: "%02d", Int(session.duration) % 60))
+                            .font(.system(size: 44, weight: .bold, design: .rounded))
+                            .foregroundStyle(.blue)
+                        Text("SEC")
+                            .font(.caption2)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.secondary)
                     }
                 }
-                .padding(.vertical, 16)
-                .frame(maxWidth: .infinity)
-                .background(Color(.systemBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 16))
-                .shadow(color: .black.opacity(0.05), radius: 8, y: 2)
-                .padding(.horizontal)
-                .padding(.top, 8)
+                .monospacedDigit()
+                .id(currentTime)
                 
-                // Divider
-                Divider()
-                    .padding(.top, 12)
+                // Always show stats row for consistent height
+                HStack(spacing: 24) {
+                    VStack(spacing: 2) {
+                        Text(session.rallyCount > 0 ? "\(session.rallyCount)" : "—")
+                            .font(.headline)
+                            .fontWeight(.bold)
+                        Text("Passes")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                    
+                    VStack(spacing: 2) {
+                        Text(session.rallyCount > 0 ? String(format: "%.2f", session.teamAverage) : "—")
+                            .font(.headline)
+                            .fontWeight(.bold)
+                            .foregroundStyle(session.rallyCount > 0 ? teamAverageColor(session.teamAverage) : .primary)
+                        Text("Avg Rating")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                    
+                    VStack(spacing: 2) {
+                        Text(session.rallyCount > 0 ? "\(Int(session.goodPassPercentage))%" : "—")
+                            .font(.headline)
+                            .fontWeight(.bold)
+                        Text("Good Pass")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                }
             }
-            .background(Color(.systemGroupedBackground))
+            .padding(.vertical, 16)
+            .frame(maxWidth: .infinity)
+            .background(Color(.systemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .shadow(color: .black.opacity(0.08), radius: 10, y: 3)
+            .padding(.horizontal)
+            .padding(.top, 8)
+            
+            // Divider
+            Divider()
+                .padding(.top, 12)
         }
+    }
     
     private func teamAverageColor(_ average: Double) -> Color {
         if average >= 2.5 { return .green }
@@ -289,55 +301,57 @@ struct LiveSessionGridView: View {
 
 struct LivePlayerTile: View {
     @Bindable var player: Player
+    let isCompact: Bool
     
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: isCompact ? 8 : 12) {
             // Player info header
             HStack {
                 Text("#\(player.number)")
-                    .font(.title3)
+                    .font(isCompact ? .body : .title3)
                     .fontWeight(.bold)
                     .foregroundStyle(.blue)
                 Spacer()
                 Text(player.name.uppercased())
-                    .font(.caption)
+                    .font(isCompact ? .caption2 : .caption)
                     .fontWeight(.semibold)
                     .foregroundStyle(.secondary)
+                    .lineLimit(1)
             }
             
             // Circular progress with average
             ZStack {
                 Circle()
-                    .stroke(Color(.systemGray5), lineWidth: 10)
+                    .stroke(Color(.systemGray5), lineWidth: isCompact ? 8 : 10)
                 
                 Circle()
                     .trim(from: 0, to: progressValue)
-                    .stroke(performanceColor, style: StrokeStyle(lineWidth: 10, lineCap: .round))
+                    .stroke(performanceColor, style: StrokeStyle(lineWidth: isCompact ? 8 : 10, lineCap: .round))
                     .rotationEffect(.degrees(-90))
                     .animation(.easeInOut(duration: 0.5), value: progressValue)
                 
                 VStack(spacing: 2) {
                     if player.passCount > 0 {
                         Text(String(format: "%.1f", player.average))
-                            .font(.system(size: 36, weight: .bold, design: .rounded))
+                            .font(.system(size: isCompact ? 28 : 36, weight: .bold, design: .rounded))
                             .animation(.easeInOut(duration: 0.3), value: player.average)
                     } else {
                         Text("—")
-                            .font(.system(size: 36, weight: .bold, design: .rounded))
+                            .font(.system(size: isCompact ? 28 : 36, weight: .bold, design: .rounded))
                             .foregroundStyle(.secondary)
                     }
                     Text("AVG RATING")
-                        .font(.system(size: 9, weight: .semibold))
+                        .font(.system(size: isCompact ? 8 : 9, weight: .semibold))
                         .foregroundStyle(.secondary)
                 }
             }
-            .frame(height: 110)
+            .frame(height: isCompact ? 90 : 110)
         }
-        .padding(16)
+        .padding(isCompact ? 12 : 16)
         .background(tileBackgroundColor)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .clipShape(RoundedRectangle(cornerRadius: isCompact ? 12 : 16))
         .overlay(
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: isCompact ? 12 : 16)
                 .stroke(tileBorderColor, lineWidth: 2)
         )
         .shadow(color: tileShadowColor, radius: 8, y: 4)
@@ -358,7 +372,6 @@ struct LivePlayerTile: View {
     }
     
     private var tileBackgroundColor: Color {
-        // Always keep background subtle - never fill with color
         return Color(.secondarySystemBackground)
     }
     

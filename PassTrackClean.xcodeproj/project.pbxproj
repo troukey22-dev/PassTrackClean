@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		AD2E0BDA2F167E4000779C4D /* SelectPassersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E0BD92F167E3900779C4D /* SelectPassersView.swift */; };
 		AD2E0BDC2F167E6F00779C4D /* ConfigureFieldsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E0BDB2F167E6900779C4D /* ConfigureFieldsView.swift */; };
+		AD2E0BE22F17EA3200779C4D /* PlayerDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E0BE12F17EA2700779C4D /* PlayerDetailView.swift */; };
+		AD2E0BE42F17EE4E00779C4D /* PlayerComparisonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E0BE32F17EE4800779C4D /* PlayerComparisonView.swift */; };
+		AD2E0BE62F17F1F100779C4D /* AdvancedSessionFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E0BE52F17F1EA00779C4D /* AdvancedSessionFilterView.swift */; };
 		AD3797542F10A8B800D91F92 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797482F10A3EF00D91F92 /* AppSettings.swift */; };
 		AD3797552F10A8B800D91F92 /* Rally.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797472F10A3DE00D91F92 /* Rally.swift */; };
 		AD3797562F10A8B800D91F92 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797492F10A47200D91F92 /* ContentView.swift */; };
@@ -33,6 +36,9 @@
 /* Begin PBXFileReference section */
 		AD2E0BD92F167E3900779C4D /* SelectPassersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPassersView.swift; sourceTree = "<group>"; };
 		AD2E0BDB2F167E6900779C4D /* ConfigureFieldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureFieldsView.swift; sourceTree = "<group>"; };
+		AD2E0BE12F17EA2700779C4D /* PlayerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerDetailView.swift; sourceTree = "<group>"; };
+		AD2E0BE32F17EE4800779C4D /* PlayerComparisonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerComparisonView.swift; sourceTree = "<group>"; };
+		AD2E0BE52F17F1EA00779C4D /* AdvancedSessionFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedSessionFilterView.swift; sourceTree = "<group>"; };
 		AD37972D2F10A27800D91F92 /* PassTrackClean.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PassTrackClean.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD3797432F10A36D00D91F92 /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
 		AD3797442F10A39F00D91F92 /* Team.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
@@ -132,6 +138,9 @@
 		AD37973F2F10A32400D91F92 /* Teams */ = {
 			isa = PBXGroup;
 			children = (
+				AD2E0BE52F17F1EA00779C4D /* AdvancedSessionFilterView.swift */,
+				AD2E0BE32F17EE4800779C4D /* PlayerComparisonView.swift */,
+				AD2E0BE12F17EA2700779C4D /* PlayerDetailView.swift */,
 				AD37974C2F10A58600D91F92 /* AddPlayerSheet.swift */,
 				AD37974B2F10A56000D91F92 /* CreateTeamSheet.swift */,
 				AD37974A2F10A54700D91F92 /* TeamsListView.swift */,
@@ -241,9 +250,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD2E0BE42F17EE4E00779C4D /* PlayerComparisonView.swift in Sources */,
 				AD2E0BDA2F167E4000779C4D /* SelectPassersView.swift in Sources */,
 				AD37976A2F15842300D91F92 /* SettingsView.swift in Sources */,
 				AD37975B2F10A93B00D91F92 /* PassScoreButtons.swift in Sources */,
+				AD2E0BE62F17F1F100779C4D /* AdvancedSessionFilterView.swift in Sources */,
+				AD2E0BE22F17EA3200779C4D /* PlayerDetailView.swift in Sources */,
 				AD37975C2F10A93B00D91F92 /* PlayerTile.swift in Sources */,
 				AD37975D2F10A93B00D91F92 /* ProgressView.swift in Sources */,
 				AD37975E2F10A93B00D91F92 /* LogSheetView.swift in Sources */,

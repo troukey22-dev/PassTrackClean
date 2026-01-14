@@ -23,6 +23,7 @@ class AppSettings {
     var buttonLayout: ButtonLayout = .grid
     var showPlayerPhotos: Bool = false
     var enableHaptics: Bool = true
+    var gridColumns: Int = 2  // 2 = standard, 3 = compact
     
     enum ScoringSystem: String, CaseIterable {
         case fourPoint = "4-Point (3-2-1-0)"

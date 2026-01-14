@@ -207,70 +207,115 @@ struct LogSheetView: View {
         .buttonStyle(.plain)
     }
     
-    // MARK: - Contact Location Section
-    private var contactLocationSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Contact Location")
-                .font(.headline)
-            
-            // 3x3 grid
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 8) {
-                ForEach(1...9, id: \.self) { position in
-                    contactLocationButton(position: position)
+    // MARK: - Body Contact Position Section
+        private var contactLocationSection: some View {
+            VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Body Contact Position")
+                        .font(.headline)
+                    Text("Where on your body did you contact the ball?")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                
+                // 3x3 grid with labels
+                VStack(spacing: 8) {
+                    // Row labels
+                    HStack(spacing: 8) {
+                        Text("HIGH")
+                            .font(.caption2)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.secondary)
+                            .frame(width: 50, alignment: .trailing)
+                        
+                        ForEach(["Left", "Mid", "Right"], id: \.self) { position in
+                            contactLocationButton(row: "High", position: position)
+                        }
+                    }
+                    
+                    HStack(spacing: 8) {
+                        Text("WAIST")
+                            .font(.caption2)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.secondary)
+                            .frame(width: 50, alignment: .trailing)
+                        
+                        ForEach(["Left", "Mid", "Right"], id: \.self) { position in
+                            contactLocationButton(row: "Waist", position: position)
+                        }
+                    }
+                    
+                    HStack(spacing: 8) {
+                        Text("LOW")
+                            .font(.caption2)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.secondary)
+                            .frame(width: 50, alignment: .trailing)
+                        
+                        ForEach(["Left", "Mid", "Right"], id: \.self) { position in
+                            contactLocationButton(row: "Low", position: position)
+                        }
+                    }
                 }
             }
         }
-    }
-    
-    private func contactLocationButton(position: Int) -> some View {
-        Button {
-            withAnimation(.spring(response: 0.3)) {
-                selectedContactLocation = "\(position)"
-            }
-        } label: {
-            Text("\(position)")
-                .font(.title3)
-                .fontWeight(.semibold)
-                .foregroundStyle(selectedContactLocation == "\(position)" ? .white : .primary)
+        
+        private func contactLocationButton(row: String, position: String) -> some View {
+            let locationString = "\(row)-\(position)"
+            
+            return Button {
+                withAnimation(.spring(response: 0.3)) {
+                    selectedContactLocation = locationString
+                }
+            } label: {
+                VStack(spacing: 2) {
+                    Text(position.prefix(1))
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                }
+                .foregroundStyle(selectedContactLocation == locationString ? .white : .primary)
                 .frame(maxWidth: .infinity)
                 .frame(height: 50)
-                .background(selectedContactLocation == "\(position)" ? Color.blue : Color(.secondarySystemBackground))
+                .background(selectedContactLocation == locationString ? Color.blue : Color(.secondarySystemBackground))
                 .clipShape(RoundedRectangle(cornerRadius: 8))
+            }
+            .buttonStyle(.plain)
         }
-        .buttonStyle(.plain)
-    }
     
     // MARK: - Serve Type Section
-    private var serveTypeSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Serve Type")
-                .font(.headline)
-            
-            VStack(spacing: 12) {
-                serveTypeButton(type: "Float")
-                serveTypeButton(type: "Jump")
-                serveTypeButton(type: "Jump Spin")
+        private var serveTypeSection: some View {
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Serve Type")
+                    .font(.headline)
+                
+                HStack(spacing: 12) {
+                    serveTypeButton(type: "Float", icon: "arrow.up")
+                    serveTypeButton(type: "Spin", icon: "arrow.up.forward")
+                }
             }
         }
-    }
-    
-    private func serveTypeButton(type: String) -> some View {
-        Button {
-            withAnimation(.spring(response: 0.3)) {
-                selectedServeType = type
-            }
-        } label: {
-            Text(type)
-                .font(.body)
-                .fontWeight(.medium)
+        
+        private func serveTypeButton(type: String, icon: String) -> some View {
+            Button {
+                withAnimation(.spring(response: 0.3)) {
+                    selectedServeType = type
+                }
+            } label: {
+                VStack(spacing: 8) {
+                    Image(systemName: icon)
+                        .font(.title2)
+                    Text(type)
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                }
                 .foregroundStyle(selectedServeType == type ? .white : .primary)
                 .frame(maxWidth: .infinity)
-                .padding()
+                .frame(height: 80)
                 .background(selectedServeType == type ? Color.blue : Color(.secondarySystemBackground))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .buttonStyle(.plain)
         }
-        .buttonStyle(.plain)
-    }
     
     // MARK: - Actions
     // MARK: - Actions

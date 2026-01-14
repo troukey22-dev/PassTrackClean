@@ -10,69 +10,166 @@ import SwiftData
 
 struct ProgressView: View {
     @Environment(DataStore.self) private var dataStore
-    @Query(sort: \Session.startTime, order: .reverse) private var completedSessions: [Session]
-    @State private var passers: [Player] = []
+    @Query(sort: \Team.createdAt, order: .reverse) private var teams: [Team]
+    @Query(sort: \Session.startTime, order: .reverse) private var allSessions: [Session]
     
     var body: some View {
         NavigationStack {
             ScrollView {
-                if let session = dataStore.currentSession {
-                    currentSessionStats(session: session)
-                } else if !completedSessions.isEmpty {
-                    recentSessionsList
-                } else {
+                if allSessions.isEmpty && dataStore.currentSession == nil {
                     emptyState
+                } else {
+                    VStack(spacing: 24) {
+                        // Current Session (if active)
+                        if let session = dataStore.currentSession {
+                            currentSessionCard(session: session)
+                        }
+                        
+                        // Teams Section
+                        if !teams.isEmpty {
+                            teamsSection
+                        }
+                        
+                        // Recent Sessions Section
+                        if !allSessions.isEmpty {
+                            recentSessionsSection
+                        }
+                    }
+                    .padding(.vertical)
                 }
             }
-            .navigationTitle("Progress")
+            .navigationTitle("Team Stats")
+            .background(Color(.systemGroupedBackground))
         }
     }
     
-    private var emptyState: some View {
-            VStack(spacing: 20) {
-                Spacer()
-                
-                Image(systemName: "chart.bar.fill")
-                    .font(.system(size: 60))
-                    .foregroundStyle(.blue)
-                
-                Text("No Sessions Yet")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                
-                Text("Start tracking a practice session to see detailed stats and player performance")
-                    .font(.subheadline)
+    // MARK: - Current Session Card
+    private func currentSessionCard(session: Session) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Circle()
+                    .fill(Color.red)
+                    .frame(width: 8, height: 8)
+                Text("CURRENT SESSION")
+                    .font(.caption)
+                    .fontWeight(.semibold)
                     .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 40)
-                
-                VStack(alignment: .leading, spacing: 8) {
-                    Label("Real-time pass tracking", systemImage: "clock.fill")
-                    Label("Individual player stats", systemImage: "person.fill")
-                    Label("Team performance trends", systemImage: "chart.line.uptrend.xyaxis")
-                }
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .padding()
-                .background(Color(.secondarySystemBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .padding(.horizontal, 40)
-                
-                Spacer()
             }
-            .frame(maxHeight: .infinity)
-            .padding()
+            .padding(.horizontal)
+            
+            NavigationLink {
+                // Navigate to live track (session is already active)
+                EmptyView()
+            } label: {
+                HStack(spacing: 16) {
+                    Circle()
+                        .fill(Color.red.opacity(0.1))
+                        .frame(width: 56, height: 56)
+                        .overlay {
+                            Image(systemName: "record.circle")
+                                .font(.title3)
+                                .foregroundStyle(.red)
+                        }
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(session.teamName)
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.primary)
+                        
+                        HStack(spacing: 12) {
+                            Text("\(session.rallyCount) passes")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                            
+                            if session.rallyCount > 0 {
+                                Text("•")
+                                    .foregroundStyle(.secondary)
+                                Text(String(format: "%.2f avg", session.teamAverage))
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        
+                        Text(session.durationFormatted + " elapsed")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    
+                    Spacer()
+                    
+                    Text("LIVE")
+                        .font(.caption)
+                        .fontWeight(.bold)
+                        .foregroundStyle(.red)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(Color.red.opacity(0.1))
+                        .clipShape(Capsule())
+                }
+                .padding()
+                .background(Color(.systemBackground))
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .shadow(color: .black.opacity(0.05), radius: 4, y: 2)
+            }
+            .padding(.horizontal)
         }
+    }
     
-    private var recentSessionsList: some View {
-        VStack(alignment: .leading, spacing: 16) {
+    // MARK: - Teams Section
+    private var teamsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("TEAMS")
+                .font(.caption)
+                .fontWeight(.semibold)
+                .foregroundStyle(.secondary)
+                .padding(.horizontal)
+            
+            // Show first 3 teams
+            ForEach(teams.prefix(3)) { team in
+                NavigationLink {
+                    TeamDetailView(team: team)
+                } label: {
+                    TeamCard(team: team, sessions: sessionsForTeam(team))
+                }
+                .buttonStyle(.plain)
+            }
+            
+            // "View All Teams" button if more than 3
+            if teams.count > 3 {
+                NavigationLink {
+                    AllTeamsView()
+                } label: {
+                    HStack {
+                        Text("View All Teams (\(teams.count))")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.blue)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding()
+                    .background(Color(.systemBackground))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                .padding(.horizontal)
+            }
+        }
+    }
+    
+    // MARK: - Recent Sessions Section
+    private var recentSessionsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
             Text("RECENT SESSIONS")
                 .font(.caption)
                 .fontWeight(.semibold)
                 .foregroundStyle(.secondary)
                 .padding(.horizontal)
             
-            ForEach(completedSessions.prefix(10)) { session in
+            // Show first 5 sessions
+            ForEach(allSessions.prefix(5)) { session in
                 NavigationLink {
                     SessionDetailView(session: session)
                 } label: {
@@ -80,151 +177,143 @@ struct ProgressView: View {
                 }
                 .buttonStyle(.plain)
             }
+            
+            // "View All Sessions" button if more than 5, this was removced so filter always shows
+                NavigationLink {
+                    AdvancedSessionFilterView()
+                } label: {
+                    HStack {
+                        Text("View All Sessions (\(allSessions.count))")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.blue)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding()
+                    .background(Color(.systemBackground))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                .padding(.horizontal)
         }
-        .padding(.vertical)
     }
     
-    private func currentSessionStats(session: Session) -> some View {
-        VStack(alignment: .leading, spacing: 24) {
-            VStack(alignment: .leading, spacing: 12) {
-                Text("CURRENT SESSION")
-                    .font(.caption)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.secondary)
-                
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Total Passes")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                        Text("\(session.rallyCount)")
-                            .font(.title)
-                            .fontWeight(.bold)
-                    }
-                    
-                    Spacer()
-                    
-                    VStack(alignment: .trailing, spacing: 4) {
-                        Text("Team Average")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                        Text(String(format: "%.2f", session.teamAverage))
-                            .font(.title)
-                            .fontWeight(.bold)
-                    }
-                }
-                
-                Divider()
-                
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Duration")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                        Text(session.durationFormatted)
-                            .font(.headline)
-                    }
-                    
-                    Spacer()
-                    
-                    VStack(alignment: .trailing, spacing: 4) {
-                        Text("Good Pass %")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                        Text(String(format: "%.0f%%", session.goodPassPercentage))
-                            .font(.headline)
-                    }
-                }
+    // MARK: - Empty State
+    private var emptyState: some View {
+        VStack(spacing: 20) {
+            Spacer()
+            
+            Image(systemName: "chart.bar.fill")
+                .font(.system(size: 60))
+                .foregroundStyle(.blue)
+            
+            Text("No Sessions Yet")
+                .font(.title2)
+                .fontWeight(.bold)
+            
+            Text("Start tracking a practice session to see detailed stats and player performance")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 40)
+            
+            VStack(alignment: .leading, spacing: 8) {
+                Label("Real-time pass tracking", systemImage: "clock.fill")
+                Label("Individual player stats", systemImage: "person.fill")
+                Label("Team performance trends", systemImage: "chart.line.uptrend.xyaxis")
             }
+            .font(.caption)
+            .foregroundStyle(.secondary)
             .padding()
             .background(Color(.secondarySystemBackground))
             .clipShape(RoundedRectangle(cornerRadius: 12))
+            .padding(.horizontal, 40)
             
-            VStack(alignment: .leading, spacing: 12) {
-                Text("PLAYER STATS")
-                    .font(.caption)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.secondary)
-                
-                ForEach(passers.sorted(by: { $0.average > $1.average })) { player in
-                    PlayerStatRow(player: player)
-                }
-            }
-            
-            if session.rallyCount > 0 {
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("PASS DISTRIBUTION")
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.secondary)
-                    
-                    passDistributionChart(session: session)
-                }
-                .padding()
-                .background(Color(.secondarySystemBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-            }
+            Spacer()
         }
+        .frame(maxHeight: .infinity)
         .padding()
-        .onAppear {
-            passers = dataStore.getPassers(for: session)
-        }
     }
     
-    private func passDistributionChart(session: Session) -> some View {
-        VStack(spacing: 8) {
-            ForEach([3, 2, 1, 0], id: \.self) { score in
-                let count = session.rallies.filter { $0.passScore == score }.count
-                let percentage = session.rallyCount > 0 ? Double(count) / Double(session.rallyCount) : 0.0
-                
-                HStack {
-                    Text(scoreLabel(score))
-                        .font(.subheadline)
-                        .frame(width: 80, alignment: .leading)
-                    
-                    GeometryReader { geometry in
-                        ZStack(alignment: .leading) {
-                            Rectangle()
-                                .fill(Color(.systemGray5))
-                            
-                            Rectangle()
-                                .fill(scoreColor(score))
-                                .frame(width: geometry.size.width * percentage)
-                        }
-                    }
-                    .frame(height: 24)
-                    .clipShape(RoundedRectangle(cornerRadius: 4))
-                    
-                    Text("\(count)")
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                        .frame(width: 40, alignment: .trailing)
-                }
-            }
-        }
-    }
-    
-    private func scoreLabel(_ score: Int) -> String {
-        switch score {
-        case 3: return "🟢 Perfect"
-        case 2: return "🟡 Good"
-        case 1: return "🟠 Poor"
-        case 0: return "🔴 Ace"
-        default: return "Unknown"
-        }
-    }
-    
-    private func scoreColor(_ score: Int) -> Color {
-        switch score {
-        case 3: return .green
-        case 2: return .yellow
-        case 1: return .orange
-        case 0: return .red
-        default: return .gray
-        }
+    // MARK: - Helper Functions
+    private func sessionsForTeam(_ team: Team) -> [Session] {
+        allSessions.filter { $0.teamId == team.id }
     }
 }
 
+// MARK: - Team Card Component
+struct TeamCard: View {
+    let team: Team
+    let sessions: [Session]
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            // Team icon
+            Circle()
+                .fill(Color.blue.opacity(0.1))
+                .frame(width: 56, height: 56)
+                .overlay {
+                    Image(systemName: "person.3.fill")
+                        .font(.title3)
+                        .foregroundStyle(.blue)
+                }
+            
+            // Team info
+            VStack(alignment: .leading, spacing: 4) {
+                Text(team.name)
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.primary)
+                
+                if !sessions.isEmpty {
+                    HStack(spacing: 8) {
+                        Text("\(sessions.count) sessions")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        
+                        Text("•")
+                            .foregroundStyle(.secondary)
+                        
+                        Text(String(format: "%.1f avg", teamAverage))
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                } else {
+                    Text("No sessions yet")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+                
+                if let lastSession = sessions.first {
+                    Text("Last: \(lastSession.startTime, style: .relative) ago")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            
+            Spacer()
+            
+            Image(systemName: "chevron.right")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .padding()
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.05), radius: 4, y: 2)
+        .padding(.horizontal)
+    }
+    
+    private var teamAverage: Double {
+        guard !sessions.isEmpty else { return 0.0 }
+        let totalAvg = sessions.reduce(0.0) { $0 + $1.teamAverage }
+        return totalAvg / Double(sessions.count)
+    }
+}
+
+// MARK: - Session Row Component
 struct SessionRow: View {
     let session: Session
     
@@ -242,15 +331,32 @@ struct SessionRow: View {
             
             // Session info
             VStack(alignment: .leading, spacing: 4) {
-                Text(session.teamName)
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                Text(session.startTime, style: .date)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                Text("\(session.rallyCount) passes • \(String(format: "%.1f", session.teamAverage)) avg")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                HStack(spacing: 8) {
+                    Text(session.teamName)
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.primary)
+                    
+                    Text("•")
+                        .foregroundStyle(.secondary)
+                    
+                    Text(session.startTime, style: .date)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+                
+                HStack(spacing: 8) {
+                    Text("\(session.rallyCount) passes")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    
+                    Text("•")
+                        .foregroundStyle(.secondary)
+                    
+                    Text(String(format: "%.1f avg", session.teamAverage))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
             }
             
             Spacer()
@@ -260,43 +366,65 @@ struct SessionRow: View {
                 .foregroundStyle(.secondary)
         }
         .padding()
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.05), radius: 4, y: 2)
         .padding(.horizontal)
     }
 }
 
-struct PlayerStatRow: View {
-    @Bindable var player: Player
+// MARK: - All Teams View (Placeholder)
+struct AllTeamsView: View {
+    @Query(sort: \Team.createdAt, order: .reverse) private var teams: [Team]
+    @Query(sort: \Session.startTime, order: .reverse) private var allSessions: [Session]
     
     var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(player.name)
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                
-                Text("\(player.passCount) passes")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+        ScrollView {
+            VStack(spacing: 12) {
+                ForEach(teams) { team in
+                    let teamSessions = allSessions.filter { $0.teamId == team.id }
+                    NavigationLink {
+                        TeamDetailView(team: team)
+                    } label: {
+                        TeamCard(team: team, sessions: teamSessions)
+                    }
+                    .buttonStyle(.plain)
+                }
             }
-            
-            Spacer()
-            
-            Text(String(format: "%.2f", player.average))
-                .font(.title3)
-                .fontWeight(.bold)
-                .foregroundStyle(averageColor(player.average))
+            .padding(.vertical)
         }
-        .padding()
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .navigationTitle("All Teams")
+        .background(Color(.systemGroupedBackground))
     }
+}
+
+// MARK: - All Sessions View (Placeholder)
+struct AllSessionsView: View {
+    @Query(sort: \Session.startTime, order: .reverse) private var allSessions: [Session]
     
-    private func averageColor(_ avg: Double) -> Color {
-        if avg >= 2.5 { return .green }
-        if avg >= 2.0 { return .orange }
-        if avg >= 1.5 { return .red }
-        return .secondary
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 12) {
+                ForEach(allSessions) { session in
+                    NavigationLink {
+                        SessionDetailView(session: session)
+                    } label: {
+                        SessionRow(session: session)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(.vertical)
+        }
+        .navigationTitle("All Sessions")
+        .background(Color(.systemGroupedBackground))
     }
+}
+
+
+
+#Preview {
+    ProgressView()
+        .environment(DataStore())
+        .modelContainer(for: [Team.self, Player.self, Session.self, Rally.self])
 }
