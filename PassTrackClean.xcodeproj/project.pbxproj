@@ -12,6 +12,7 @@
 		AD2E0BE22F17EA3200779C4D /* PlayerDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E0BE12F17EA2700779C4D /* PlayerDetailView.swift */; };
 		AD2E0BE42F17EE4E00779C4D /* PlayerComparisonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E0BE32F17EE4800779C4D /* PlayerComparisonView.swift */; };
 		AD2E0BE62F17F1F100779C4D /* AdvancedSessionFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E0BE52F17F1EA00779C4D /* AdvancedSessionFilterView.swift */; };
+		AD2E0BEC2F18142100779C4D /* ExportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E0BEB2F18141C00779C4D /* ExportManager.swift */; };
 		AD3797542F10A8B800D91F92 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797482F10A3EF00D91F92 /* AppSettings.swift */; };
 		AD3797552F10A8B800D91F92 /* Rally.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797472F10A3DE00D91F92 /* Rally.swift */; };
 		AD3797562F10A8B800D91F92 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3797492F10A47200D91F92 /* ContentView.swift */; };
@@ -39,6 +40,7 @@
 		AD2E0BE12F17EA2700779C4D /* PlayerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerDetailView.swift; sourceTree = "<group>"; };
 		AD2E0BE32F17EE4800779C4D /* PlayerComparisonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerComparisonView.swift; sourceTree = "<group>"; };
 		AD2E0BE52F17F1EA00779C4D /* AdvancedSessionFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedSessionFilterView.swift; sourceTree = "<group>"; };
+		AD2E0BEB2F18141C00779C4D /* ExportManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportManager.swift; sourceTree = "<group>"; };
 		AD37972D2F10A27800D91F92 /* PassTrackClean.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PassTrackClean.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD3797432F10A36D00D91F92 /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
 		AD3797442F10A39F00D91F92 /* Team.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
@@ -172,6 +174,7 @@
 			children = (
 				AD3797532F10A7CE00D91F92 /* PassScoreButtons.swift */,
 				AD3797522F10A7B900D91F92 /* PlayerTile.swift */,
+				AD2E0BEB2F18141C00779C4D /* ExportManager.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -257,6 +260,7 @@
 				AD2E0BE62F17F1F100779C4D /* AdvancedSessionFilterView.swift in Sources */,
 				AD2E0BE22F17EA3200779C4D /* PlayerDetailView.swift in Sources */,
 				AD37975C2F10A93B00D91F92 /* PlayerTile.swift in Sources */,
+				AD2E0BEC2F18142100779C4D /* ExportManager.swift in Sources */,
 				AD37975D2F10A93B00D91F92 /* ProgressView.swift in Sources */,
 				AD37975E2F10A93B00D91F92 /* LogSheetView.swift in Sources */,
 				AD37975F2F10A93B00D91F92 /* PlayerGridView.swift in Sources */,

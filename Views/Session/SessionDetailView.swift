@@ -12,6 +12,8 @@ struct SessionDetailView: View {
     @Environment(DataStore.self) private var dataStore
     let session: Session
     @State private var passers: [Player] = []
+    @State private var showingShareSheet = false
+    @State private var shareURL: URL?
     
     var body: some View {
         ScrollView {
@@ -48,10 +50,47 @@ struct SessionDetailView: View {
             .padding()
         }
         .navigationTitle(session.teamName)
-        .navigationBarTitleDisplayMode(.inline)
-        .background(Color(.systemGroupedBackground))
-        .onAppear {
-            loadPlayerStats()
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .primaryAction) {
+                        Menu {
+                            Button {
+                                exportSessionAsPDF()
+                            } label: {
+                                Label("Export as PDF", systemImage: "doc.fill")
+                            }
+                            
+                            Button {
+                                exportSessionAsCSV()
+                            } label: {
+                                Label("Export as CSV", systemImage: "tablecells")
+                            }
+                        } label: {
+                            Image(systemName: "square.and.arrow.up")
+                        }
+                    }
+                }
+                .sheet(isPresented: $showingShareSheet) {
+                    if let url = shareURL {
+                        ShareSheet(items: [url])
+                    }
+                }
+                .onAppear {
+                    loadPlayerStats()
+                }
+            }
+    
+    private func exportSessionAsPDF() {
+        if let url = ExportManager.exportSessionToPDF(session: session, passers: passers) {
+            shareURL = url
+            showingShareSheet = true
+        }
+    }
+    
+    private func exportSessionAsCSV() {
+        if let url = ExportManager.exportSessionToCSV(session: session, passers: passers) {
+            shareURL = url
+            showingShareSheet = true
         }
     }
     
@@ -309,10 +348,10 @@ struct PassQualityBar: View {
     
     private var scoreLabel: String {
         switch score {
-        case 3: return "🟢 Perfect"
-        case 2: return "🟡 Good"
-        case 1: return "🟠 Poor"
-        case 0: return "🔴 Ace"
+        case 3: return "ðŸŸ¢ Perfect"
+        case 2: return "ðŸŸ¡ Good"
+        case 1: return "ðŸŸ  Poor"
+        case 0: return "ðŸ”´ Ace"
         default: return "Unknown"
         }
     }
@@ -346,7 +385,7 @@ struct ZoneHeatMap: View {
                     ZoneCell(zone: "1", stats: zoneStats("1"))
                 }
                 
-                Text("← NET →")
+                Text("â† NET â†’")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }
@@ -400,7 +439,7 @@ struct ZoneCell: View {
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             } else {
-                Text("—")
+                Text("â€”")
                     .font(.title2)
                     .foregroundStyle(.secondary)
                 
@@ -444,7 +483,7 @@ struct ZoneDetailRow: View {
                     .font(.subheadline)
                     .frame(width: 80, alignment: .leading)
                 
-                Text("•")
+                Text("â€¢")
                     .foregroundStyle(.secondary)
                 
                 Text("\(stats.count) passes")
@@ -546,7 +585,7 @@ struct BodyContactCell: View {
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             } else {
-                Text("—")
+                Text("â€”")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }

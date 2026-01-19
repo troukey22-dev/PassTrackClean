@@ -114,6 +114,8 @@ struct TeamDetailView: View {
     @State private var showingAddPlayer = false
     @State private var showingDeleteConfirmation = false
     @State private var dateFilter: DateFilter = .last30Days
+    @State private var showingExportShare = false
+    @State private var exportURL: URL?
     
     enum DateFilter: String, CaseIterable {
         case last7Days = "Last 7 Days"
@@ -171,8 +173,13 @@ struct TeamDetailView: View {
             }
         }
         .background(Color(.systemGroupedBackground))
-        .sheet(isPresented: $showingAddPlayer) {
-            AddPlayerSheet(isPresented: $showingAddPlayer) { name, number, position in
+                .sheet(isPresented: $showingExportShare) {
+                    if let url = exportURL {
+                        ShareSheet(items: [url])
+                    }
+                }
+                .sheet(isPresented: $showingAddPlayer) {
+                    AddPlayerSheet(isPresented: $showingAddPlayer) { name, number, position in
                 let newPlayer = Player(name: name, number: number, position: position)
                 dataStore.addPlayer(to: team, player: newPlayer)
             }
@@ -447,7 +454,7 @@ struct TeamDetailView: View {
             }
             
             Button {
-                // Export functionality (placeholder)
+                exportTeamReport()
             } label: {
                 QuickActionButton(
                     title: "Export Report",
@@ -530,6 +537,12 @@ struct TeamDetailView: View {
                 average: Double(stats.totalScore) / Double(stats.passCount)
             )
         }.sorted { $0.average > $1.average }
+    }
+    private func exportTeamReport() {
+        if let url = ExportManager.exportTeamToPDF(team: team, sessions: filteredSessions) {
+            exportURL = url
+            showingExportShare = true
+        }
     }
 }
 
