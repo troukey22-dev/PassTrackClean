@@ -114,10 +114,10 @@ class ExportManager {
             let ace = session.rallies.filter { $0.passScore == 0 }.count
             
             let distributionText = """
-            🟢 Perfect (3): \(perfect)
-            🟡 Good (2): \(good)
-            🟠 Poor (1): \(poor)
-            🔴 Ace (0): \(ace)
+            Perfect (3): \(perfect)
+            Good (2): \(good)
+            Poor (1): \(poor)
+            Ace (0): \(ace)
             """
             
             distributionText.draw(in: CGRect(x: 50, y: yPosition, width: pageWidth - 100, height: 100), withAttributes: bodyAttributes)
@@ -261,7 +261,7 @@ class ExportManager {
     // MARK: - CSV Export
     
     static func exportSessionToCSV(session: Session, passers: [Player]) -> URL? {
-        var csvText = "Rally Number,Player Name,Player Number,Pass Score,Zone,Contact Type,Contact Location,Serve Type,Timestamp\n"
+        var csvText = "Pass Number,Player Name,Player Number,Pass Score,Zone,Contact Type,Contact Location,Serve Type,Timestamp\n"
         
         let sortedRallies = session.rallies.sorted { $0.rallyNumber < $1.rallyNumber }
         

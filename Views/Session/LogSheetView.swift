@@ -23,9 +23,6 @@ struct LogSheetView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    // Player header
-                    playerHeader
-                    
                     // Pass Score (Required)
                     passScoreSection
                     
@@ -58,43 +55,24 @@ struct LogSheetView: View {
                         isPresented = false
                     }
                 }
-                ToolbarItem(placement: .primaryAction) {
-                    Button("Log") {
-                        logPass()
-                    }
-                    .fontWeight(.semibold)
-                    .disabled(selectedScore == nil)
-                }
             }
-        }
-    }
-    
-    // MARK: - Player Header
-    private var playerHeader: some View {
-        HStack(spacing: 16) {
-            Circle()
-                .fill(Color.blue.opacity(0.1))
-                .frame(width: 60, height: 60)
-                .overlay {
-                    Text("#\(player.number)")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundStyle(.blue)
+            .safeAreaInset(edge: .bottom) {
+                // Big LOG button
+                Button {
+                    logPass()
+                } label: {
+                    Text("LOG PASS FOR #\(player.number) \(player.name.uppercased())")
+                        .font(.system(size: 18, weight: .bold))
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 60)
+                        .background(selectedScore == nil ? Color.gray : Color(red: 0.545, green: 0.361, blue: 0.965))
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
                 }
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text(player.name)
-                    .font(.title3)
-                    .fontWeight(.bold)
-                
-                if let position = player.position {
-                    Text(position)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
+                .disabled(selectedScore == nil)
+                .padding()
+                .background(Color(.systemBackground))
             }
-            
-            Spacer()
         }
     }
     
@@ -104,30 +82,26 @@ struct LogSheetView: View {
             Text("Pass Score")
                 .font(.headline)
             
-            // 2x2 grid of score buttons
-            LazyVGrid(columns: [
-                GridItem(.flexible()),
-                GridItem(.flexible())
-            ], spacing: 12) {
-                PassScoreButtons.scoreButton(score: 3, isSelected: selectedScore == 3) {
+            HStack(spacing: 12) {
+                PassScoreButtons.tallScoreButton(score: 3, isSelected: selectedScore == 3) {
                     withAnimation(.spring(response: 0.3)) {
                         selectedScore = 3
                     }
                 }
                 
-                PassScoreButtons.scoreButton(score: 2, isSelected: selectedScore == 2) {
+                PassScoreButtons.tallScoreButton(score: 2, isSelected: selectedScore == 2) {
                     withAnimation(.spring(response: 0.3)) {
                         selectedScore = 2
                     }
                 }
                 
-                PassScoreButtons.scoreButton(score: 1, isSelected: selectedScore == 1) {
+                PassScoreButtons.tallScoreButton(score: 1, isSelected: selectedScore == 1) {
                     withAnimation(.spring(response: 0.3)) {
                         selectedScore = 1
                     }
                 }
                 
-                PassScoreButtons.scoreButton(score: 0, isSelected: selectedScore == 0) {
+                PassScoreButtons.tallScoreButton(score: 0, isSelected: selectedScore == 0) {
                     withAnimation(.spring(response: 0.3)) {
                         selectedScore = 0
                     }
@@ -142,9 +116,13 @@ struct LogSheetView: View {
             Text("Zone")
                 .font(.headline)
             
-            HStack(spacing: 12) {
-                ForEach(["5", "6", "1"], id: \.self) { zone in
-                    zoneButton(zone: zone)
+            // Get team's zone type
+            if let session = dataStore.currentSession,
+               let team = dataStore.fetchTeam(byId: session.teamId) {
+                HStack(spacing: 12) {
+                    ForEach(team.zoneType.zones, id: \.self) { zone in
+                        zoneButton(zone: zone)
+                    }
                 }
             }
         }
@@ -162,11 +140,11 @@ struct LogSheetView: View {
                 .foregroundStyle(selectedZone == zone ? .white : .primary)
                 .frame(maxWidth: .infinity)
                 .frame(height: 60)
-                .background(selectedZone == zone ? Color.blue : Color(.secondarySystemBackground))
+                .background(selectedZone == zone ? Color(red: 0.545, green: 0.361, blue: 0.965) : Color(.secondarySystemBackground))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
-                        .stroke(selectedZone == zone ? Color.blue : Color.clear, lineWidth: 2)
+                        .stroke(selectedZone == zone ? Color(red: 0.545, green: 0.361, blue: 0.965) : Color.clear, lineWidth: 2)
                 )
         }
         .buttonStyle(.plain)
@@ -191,133 +169,129 @@ struct LogSheetView: View {
                 selectedContactType = type
             }
         } label: {
-            VStack(spacing: 8) {
-                Image(systemName: type == "Platform" ? "hand.raised.fill" : "hand.point.up.left.fill")
-                    .font(.title2)
+            HStack(spacing: 12) {
+                Image(type == "Platform" ? "platform" : "hands")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 36, height: 36)
+                
                 Text(type)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                
+                Spacer()
             }
             .foregroundStyle(selectedContactType == type ? .white : .primary)
             .frame(maxWidth: .infinity)
-            .frame(height: 80)
-            .background(selectedContactType == type ? Color.blue : Color(.secondarySystemBackground))
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .background(selectedContactType == type ? Color(red: 0.545, green: 0.361, blue: 0.965) : Color(.secondarySystemBackground))
             .clipShape(RoundedRectangle(cornerRadius: 12))
         }
         .buttonStyle(.plain)
     }
     
     // MARK: - Body Contact Position Section
-        private var contactLocationSection: some View {
-            VStack(alignment: .leading, spacing: 12) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Body Contact Position")
-                        .font(.headline)
-                    Text("Where on your body did you contact the ball?")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+    private var contactLocationSection: some View {
+        VStack(spacing: 12) {
+            // Title centered
+            VStack(spacing: 4) {
+                Text("Body Contact Position")
+                    .font(.headline)
+                Text("Where on your body did you contact the ball?")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .frame(maxWidth: .infinity, alignment: .center)
+            
+            // 3x3 grid centered - no row labels
+            VStack(spacing: 8) {
+                HStack(spacing: 8) {
+                    contactLocationButton(label: "LEFT HIGH", row: "High", position: "Left")
+                    contactLocationButton(label: "MID HIGH", row: "High", position: "Mid")
+                    contactLocationButton(label: "RIGHT HIGH", row: "High", position: "Right")
                 }
                 
-                // 3x3 grid with labels
-                VStack(spacing: 8) {
-                    // Row labels
-                    HStack(spacing: 8) {
-                        Text("HIGH")
-                            .font(.caption2)
-                            .fontWeight(.semibold)
-                            .foregroundStyle(.secondary)
-                            .frame(width: 50, alignment: .trailing)
-                        
-                        ForEach(["Left", "Mid", "Right"], id: \.self) { position in
-                            contactLocationButton(row: "High", position: position)
-                        }
-                    }
-                    
-                    HStack(spacing: 8) {
-                        Text("WAIST")
-                            .font(.caption2)
-                            .fontWeight(.semibold)
-                            .foregroundStyle(.secondary)
-                            .frame(width: 50, alignment: .trailing)
-                        
-                        ForEach(["Left", "Mid", "Right"], id: \.self) { position in
-                            contactLocationButton(row: "Waist", position: position)
-                        }
-                    }
-                    
-                    HStack(spacing: 8) {
-                        Text("LOW")
-                            .font(.caption2)
-                            .fontWeight(.semibold)
-                            .foregroundStyle(.secondary)
-                            .frame(width: 50, alignment: .trailing)
-                        
-                        ForEach(["Left", "Mid", "Right"], id: \.self) { position in
-                            contactLocationButton(row: "Low", position: position)
-                        }
-                    }
+                HStack(spacing: 8) {
+                    contactLocationButton(label: "LEFT WAIST", row: "Waist", position: "Left")
+                    contactLocationButton(label: "MID WAIST", row: "Waist", position: "Mid")
+                    contactLocationButton(label: "RIGHT WAIST", row: "Waist", position: "Right")
+                }
+                
+                HStack(spacing: 8) {
+                    contactLocationButton(label: "LEFT LOW", row: "Low", position: "Left")
+                    contactLocationButton(label: "MID LOW", row: "Low", position: "Mid")
+                    contactLocationButton(label: "RIGHT LOW", row: "Low", position: "Right")
                 }
             }
         }
+    }
+
+    private func contactLocationButton(label: String, row: String, position: String) -> some View {
+        let locationString = "\(row)-\(position)"
         
-        private func contactLocationButton(row: String, position: String) -> some View {
-            let locationString = "\(row)-\(position)"
-            
-            return Button {
-                withAnimation(.spring(response: 0.3)) {
-                    selectedContactLocation = locationString
-                }
-            } label: {
-                VStack(spacing: 2) {
-                    Text(position.prefix(1))
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                }
+        return Button {
+            withAnimation(.spring(response: 0.3)) {
+                selectedContactLocation = locationString
+            }
+        } label: {
+            Text(label)
+                .font(.system(size: 10, weight: .bold))
                 .foregroundStyle(selectedContactLocation == locationString ? .white : .primary)
                 .frame(maxWidth: .infinity)
                 .frame(height: 50)
-                .background(selectedContactLocation == locationString ? Color.blue : Color(.secondarySystemBackground))
+                .background(selectedContactLocation == locationString ? Color(red: 0.545, green: 0.361, blue: 0.965) : Color(.secondarySystemBackground))
                 .clipShape(RoundedRectangle(cornerRadius: 8))
-            }
-            .buttonStyle(.plain)
         }
+        .buttonStyle(.plain)
+    }
     
     // MARK: - Serve Type Section
-        private var serveTypeSection: some View {
-            VStack(alignment: .leading, spacing: 12) {
+    private var serveTypeSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text("Serve Type")
                     .font(.headline)
-                
-                HStack(spacing: 12) {
-                    serveTypeButton(type: "Float", icon: "arrow.up")
-                    serveTypeButton(type: "Spin", icon: "arrow.up.forward")
-                }
+                Text("Type of serve received")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            
+            HStack(spacing: 12) {
+                serveTypeButton(type: "Float")
+                serveTypeButton(type: "Spin")
             }
         }
-        
-        private func serveTypeButton(type: String, icon: String) -> some View {
-            Button {
-                withAnimation(.spring(response: 0.3)) {
-                    selectedServeType = type
-                }
-            } label: {
-                VStack(spacing: 8) {
-                    Image(systemName: icon)
-                        .font(.title2)
-                    Text(type)
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                }
-                .foregroundStyle(selectedServeType == type ? .white : .primary)
-                .frame(maxWidth: .infinity)
-                .frame(height: 80)
-                .background(selectedServeType == type ? Color.blue : Color(.secondarySystemBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-            }
-            .buttonStyle(.plain)
-        }
+    }
     
-    // MARK: - Actions
+    private func serveTypeButton(type: String) -> some View {
+        Button {
+            withAnimation(.spring(response: 0.3)) {
+                selectedServeType = type
+            }
+        } label: {
+            HStack(spacing: 12) {
+                Image(type == "Float" ? "floatserve" : "spinserve")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 36, height: 36)
+                
+                Text(type)
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                
+                Spacer()
+            }
+            .foregroundStyle(selectedServeType == type ? .white : .primary)
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .background(selectedServeType == type ? Color(red: 0.545, green: 0.361, blue: 0.965) : Color(.secondarySystemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .buttonStyle(.plain)
+    }
+    
     // MARK: - Actions
     private func logPass() {
         guard let score = selectedScore else { return }

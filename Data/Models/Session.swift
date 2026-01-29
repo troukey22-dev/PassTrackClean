@@ -11,21 +11,20 @@ import SwiftData
 @Model
 class Session {
     var id: UUID
-    var teamId: UUID  // Store team ID instead of direct reference
-    var teamName: String  // Cache team name for easy display
-    var passerIds: [UUID]  // Store player IDs
+    var teamId: UUID
+    var teamName: String
+    var passerIds: [UUID]
     var startTime: Date
     var endTime: Date?
     
-    // Relationship to rallies
     @Relationship(deleteRule: .cascade, inverse: \Rally.session)
     var rallies: [Rally] = []
     
-    // Settings snapshot
     var trackZone: Bool
     var trackContactType: Bool
     var trackContactLocation: Bool
     var trackServeType: Bool
+    var goodPassThreshold: Double  // ← NEW!
     
     init(
         id: UUID = UUID(),
@@ -35,7 +34,8 @@ class Session {
         trackZone: Bool = false,
         trackContactType: Bool = false,
         trackContactLocation: Bool = false,
-        trackServeType: Bool = false
+        trackServeType: Bool = false,
+        goodPassThreshold: Double = 2.0  // ← NEW!
     ) {
         self.id = id
         self.teamId = teamId
@@ -46,6 +46,7 @@ class Session {
         self.trackContactType = trackContactType
         self.trackContactLocation = trackContactLocation
         self.trackServeType = trackServeType
+        self.goodPassThreshold = goodPassThreshold
     }
     
     var rallyCount: Int {
@@ -58,10 +59,10 @@ class Session {
         return Double(total) / Double(rallies.count)
     }
     
-    // Good pass = score 2 or 3 (on 0-3 scale)
+    // ← UPDATE THIS! Use stored threshold
     var goodPassPercentage: Double {
         guard !rallies.isEmpty else { return 0.0 }
-        let goodPasses = rallies.filter { $0.passScore >= 2 }.count
+        let goodPasses = rallies.filter { Double($0.passScore) >= goodPassThreshold }.count
         return (Double(goodPasses) / Double(rallies.count)) * 100
     }
     

@@ -75,13 +75,13 @@ struct PlayerDetailView: View {
         VStack(spacing: 12) {
             HStack(spacing: 16) {
                 Circle()
-                    .fill(Color.blue.opacity(0.1))
+                    .fill(Color.appPurple.opacity(0.1))
                     .frame(width: 60, height: 60)
                     .overlay {
                         Text("#\(player.number)")
                             .font(.title2)
                             .fontWeight(.bold)
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.appPurple)
                     }
                 
                 VStack(alignment: .leading, spacing: 4) {
@@ -138,7 +138,7 @@ struct PlayerDetailView: View {
                     title: "Sessions",
                     value: "\(playerSessionCount)",
                     icon: "calendar",
-                    color: .blue
+                    color: Color.appPurple
                 )
                 
                 StatCard(
@@ -181,7 +181,7 @@ struct PlayerDetailView: View {
                 HStack(spacing: 12) {
                     HStack(spacing: 4) {
                         Circle()
-                            .fill(Color.blue)
+                            .fill(Color.appPurple)
                             .frame(width: 8, height: 8)
                         Text("Player")
                             .font(.caption2)
@@ -450,7 +450,7 @@ struct PlayerVsTeamComparisonChart: View {
                             
                             // Player line (blue)
                             playerLine(geometry: geometry)
-                                .stroke(Color.blue, style: StrokeStyle(lineWidth: 3, lineCap: .round, lineJoin: .round))
+                                .stroke(Color.appPurple, style: StrokeStyle(lineWidth: 3, lineCap: .round, lineJoin: .round))
                             
                             // Player data points
                             playerDataPoints(geometry: geometry)
@@ -570,7 +570,7 @@ struct PlayerVsTeamComparisonChart: View {
             let y = height * (1 - normalizedValue)
             
             Circle()
-                .fill(Color.blue)
+                .fill(Color.appPurple)
                 .frame(width: 8, height: 8)
                 .position(x: x, y: y)
                 .overlay(
@@ -890,12 +890,12 @@ struct PlayerSessionRow: View {
     var body: some View {
         HStack(spacing: 16) {
             Circle()
-                .fill(Color.blue.opacity(0.1))
+                .fill(Color.appPurple.opacity(0.1))
                 .frame(width: 56, height: 56)
                 .overlay {
                     Image(systemName: "chart.bar.fill")
                         .font(.title3)
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.appPurple)
                 }
             
             VStack(alignment: .leading, spacing: 4) {

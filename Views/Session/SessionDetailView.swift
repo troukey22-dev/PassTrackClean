@@ -10,10 +10,13 @@ import SwiftData
 
 struct SessionDetailView: View {
     @Environment(DataStore.self) private var dataStore
+    @Environment(\.dismiss) private var dismiss
     let session: Session
     @State private var passers: [Player] = []
     @State private var showingShareSheet = false
     @State private var shareURL: URL?
+    @State private var showingDeleteConfirmation = false
+    
     
     var body: some View {
         ScrollView {
@@ -65,8 +68,16 @@ struct SessionDetailView: View {
                             } label: {
                                 Label("Export as CSV", systemImage: "tablecells")
                             }
+                            
+                            Divider()
+                            
+                            Button(role: .destructive) {
+                                showingDeleteConfirmation = true
+                            } label: {
+                                Label("Delete Session", systemImage: "trash")
+                            }
                         } label: {
-                            Image(systemName: "square.and.arrow.up")
+                            Image(systemName: "ellipsis.circle")
                         }
                     }
                 }
@@ -75,6 +86,15 @@ struct SessionDetailView: View {
                         ShareSheet(items: [url])
                     }
                 }
+                .alert("Delete Session?", isPresented: $showingDeleteConfirmation) {
+                    Button("Cancel", role: .cancel) { }
+                    Button("Delete", role: .destructive) {
+                        deleteSession()
+                    }
+                } message: {
+                    Text("This will permanently delete this session and all its data. This cannot be undone.")
+                }
+
                 .onAppear {
                     loadPlayerStats()
                 }
@@ -294,6 +314,10 @@ struct SessionDetailView: View {
     private func loadPlayerStats() {
         passers = dataStore.getPassers(for: session)
     }
+    private func deleteSession() {
+        dataStore.deleteSession(session)
+        dismiss()
+    }
 }
 
 // MARK: - Supporting Data Models
@@ -348,10 +372,10 @@ struct PassQualityBar: View {
     
     private var scoreLabel: String {
         switch score {
-        case 3: return "ðŸŸ¢ Perfect"
-        case 2: return "ðŸŸ¡ Good"
-        case 1: return "ðŸŸ  Poor"
-        case 0: return "ðŸ”´ Ace"
+        case 3: return "Perfect"
+        case 2: return "Good"
+        case 1: return "Poor"
+        case 0: return "Ace"
         default: return "Unknown"
         }
     }
@@ -385,7 +409,7 @@ struct ZoneHeatMap: View {
                     ZoneCell(zone: "1", stats: zoneStats("1"))
                 }
                 
-                Text("â† NET â†’")
+                Text(" NET ")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }
@@ -439,7 +463,7 @@ struct ZoneCell: View {
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             } else {
-                Text("â€”")
+                Text("—")
                     .font(.title2)
                     .foregroundStyle(.secondary)
                 
@@ -483,7 +507,7 @@ struct ZoneDetailRow: View {
                     .font(.subheadline)
                     .frame(width: 80, alignment: .leading)
                 
-                Text("â€¢")
+                Text("—")
                     .foregroundStyle(.secondary)
                 
                 Text("\(stats.count) passes")
@@ -585,7 +609,7 @@ struct BodyContactCell: View {
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             } else {
-                Text("â€”")
+                Text("—")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -669,9 +693,10 @@ struct ContactTypeCard: View {
     
     var body: some View {
         VStack(spacing: 8) {
-            Image(systemName: type == "Platform" ? "hand.raised.fill" : "hand.point.up.left.fill")
-                .font(.title2)
-                .foregroundStyle(.blue)
+            Image(type == "Platform" ? "platform" : "hands")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 40, height: 40)
             
             Text(type)
                 .font(.subheadline)
@@ -748,9 +773,10 @@ struct ServeTypeCard: View {
     
     var body: some View {
         VStack(spacing: 8) {
-            Image(systemName: type == "Float" ? "arrow.up" : "arrow.up.forward")
-                .font(.title2)
-                .foregroundStyle(.blue)
+            Image(type == "Float" ? "floatserve" : "spinserve")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 40, height: 40)
             
             Text(type)
                 .font(.subheadline)
@@ -788,7 +814,7 @@ struct PlayerPerformanceRow: View {
         HStack {
             Text("#\(stat.playerNumber)")
                 .font(.headline)
-                .foregroundStyle(.blue)
+                .foregroundStyle(Color.appPurple)
                 .frame(width: 40, alignment: .leading)
             
             VStack(alignment: .leading, spacing: 4) {

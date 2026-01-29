@@ -82,7 +82,7 @@ struct SelectPassersView: View {
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(team.activePlayers.isEmpty ? Color.gray : Color.blue)
+                            .background(team.activePlayers.isEmpty ? Color.gray : Color.appPurple)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
                     .disabled(team.activePlayers.isEmpty)

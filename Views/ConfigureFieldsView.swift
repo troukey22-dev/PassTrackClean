@@ -80,7 +80,7 @@ struct ConfigureFieldsView: View {
                                     Spacer()
                                     
                                     Image(systemName: enabledFields.contains(field.0) ? "checkmark.circle.fill" : "circle")
-                                        .foregroundStyle(enabledFields.contains(field.0) ? .blue : .secondary)
+                                        .foregroundStyle(enabledFields.contains(field.0) ? Color.appPurple : .secondary)
                                         .font(.title3)
                                 }
                                 .contentShape(Rectangle())
@@ -105,7 +105,7 @@ struct ConfigureFieldsView: View {
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color.blue)
+                            .background(Color.appPurple)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
                 }

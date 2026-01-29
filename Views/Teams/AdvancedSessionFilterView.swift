@@ -72,7 +72,7 @@ struct AdvancedSessionFilterView: View {
                         showingFilters.toggle()
                     } label: {
                         Image(systemName: hasActiveFilters ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
-                            .foregroundStyle(hasActiveFilters ? .blue : .primary)
+                            .foregroundStyle(hasActiveFilters ? Color.appPurple : .primary)
                     }
                 }
             }
@@ -191,9 +191,10 @@ struct AdvancedSessionFilterView: View {
     // MARK: - Empty State
     private var emptyState: some View {
         VStack(spacing: 20) {
-            Image(systemName: "tray")
-                .font(.system(size: 60))
-                .foregroundStyle(.secondary)
+            Image("question")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 120, height: 120)
             
             Text("No Sessions Found")
                 .font(.title2)
@@ -211,7 +212,7 @@ struct AdvancedSessionFilterView: View {
                         .font(.headline)
                         .foregroundStyle(.white)
                         .padding()
-                        .background(Color.blue)
+                        .background(Color(red: 0.545, green: 0.361, blue: 0.965))
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
             }
@@ -339,7 +340,7 @@ struct FilterChip: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 6)
-        .background(Color.blue)
+        .background(Color.appPurple)
         .foregroundStyle(.white)
         .clipShape(Capsule())
     }

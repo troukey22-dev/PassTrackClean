@@ -29,7 +29,7 @@ struct LiveSessionGridView: View {
                                     HStack {
                                         Image(systemName: "volleyball.fill")
                                             .font(.title2)
-                                            .foregroundStyle(.blue)
+                                            .foregroundStyle(Color.appPurple)
                                         Text("Serve-Receive")
                                             .font(.title2)
                                             .fontWeight(.bold)
@@ -218,7 +218,7 @@ struct LiveSessionGridView: View {
                     VStack(spacing: 2) {
                         Text(String(format: "%02d", Int(session.duration) / 60))
                             .font(.system(size: 44, weight: .bold, design: .rounded))
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.appPurple)
                         Text("MIN")
                             .font(.caption2)
                             .fontWeight(.semibold)
@@ -233,7 +233,7 @@ struct LiveSessionGridView: View {
                     VStack(spacing: 2) {
                         Text(String(format: "%02d", Int(session.duration) % 60))
                             .font(.system(size: 44, weight: .bold, design: .rounded))
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.appPurple)
                         Text("SEC")
                             .font(.caption2)
                             .fontWeight(.semibold)
@@ -310,7 +310,7 @@ struct LivePlayerTile: View {
                 Text("#\(player.number)")
                     .font(isCompact ? .body : .title3)
                     .fontWeight(.bold)
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.appPurple)
                 Spacer()
                 Text(player.name.uppercased())
                     .font(isCompact ? .caption2 : .caption)
@@ -365,10 +365,10 @@ struct LivePlayerTile: View {
     private var performanceColor: Color {
         guard player.passCount > 0 else { return .gray }
         let avg = player.average
-        if avg >= 2.5 { return .green }
-        if avg >= 2.0 { return .yellow }
-        if avg >= 1.5 { return .orange }
-        return .red
+        if avg >= 2.5 { return .scorePerfect }
+        if avg >= 2.0 { return .scoreGood }
+        if avg >= 1.5 { return .scorePoor }
+        return .scoreAce
     }
     
     private var tileBackgroundColor: Color {

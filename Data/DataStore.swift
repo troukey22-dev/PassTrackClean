@@ -29,10 +29,10 @@ class DataStore {
     
     // MARK: - Team Management
     
-    func createTeam(name: String, players: [Player] = []) {
+    func createTeam(name: String, players: [Player] = [], zoneType: ZoneType = .indoor, goodPassThreshold: Double = 2.0, mascotColor: String = "purple", backgroundColor: String = "#8B5CF6") {
         guard let context = modelContext else { return }
         
-        let team = Team(name: name)
+        let team = Team(name: name, zoneType: zoneType, goodPassThreshold: goodPassThreshold, mascotColor: mascotColor, backgroundColor: backgroundColor)
         context.insert(team)
         
         // Add players to team
@@ -73,41 +73,41 @@ class DataStore {
     // MARK: - Session Management
     
     func startSession(team: Team, passers: [Player], enabledFields: [String: Bool]) {
-            guard let _ = modelContext else {
-                print("❌ ERROR: No modelContext")
-                return
-            }
-            
-            print("🎯 Starting session for team: \(team.name)")
-            print("🎯 Passers count: \(passers.count)")
-            print("🎯 Passer names: \(passers.map { $0.name })")
-            
-            // End any existing session first
-                if currentSession != nil {
-                completeSession()
-            }
-            
-            // Create new session
-            let session = Session(
-                teamId: team.id,
-                teamName: team.name,
-                passerIds: passers.map { $0.id },
-                trackZone: enabledFields["zone"] ?? false,
-                trackContactType: enabledFields["contactType"] ?? false,
-                trackContactLocation: enabledFields["contactLocation"] ?? false,
-                trackServeType: enabledFields["serveType"] ?? false
-            )
-            
-            currentSession = session
-            print("✅ Session created: \(session.teamName)")
-            
-            // Reset stats for all passers
-            passers.forEach { $0.resetStats() }
-            
-            // IMPORTANT: Store the EXACT same player instances
-            currentSessionPassers = passers
-            print("✅ Stored \(currentSessionPassers.count) passers in currentSessionPassers")
+        guard let _ = modelContext else {
+            print("âŒ ERROR: No modelContext")
+            return
         }
+        
+        print("ðŸŽ¯ Starting session for team: \(team.name)")
+        print("ðŸŽ¯ Passers count: \(passers.count)")
+        print("ðŸŽ¯ Passer names: \(passers.map { $0.name })")
+        
+        // End any existing session first
+        if currentSession != nil {
+            completeSession()
+        }
+        
+        // Create new session
+        let session = Session(
+            teamId: team.id,
+            teamName: team.name,
+            passerIds: passers.map { $0.id },
+            trackZone: enabledFields["zone"] ?? false,
+            trackContactType: enabledFields["contactType"] ?? false,
+            trackContactLocation: enabledFields["contactLocation"] ?? false,
+            trackServeType: enabledFields["serveType"] ?? false,
+            goodPassThreshold: team.goodPassThreshold  // â† NEW! Pass team's threshold
+        )
+        
+        currentSession = session
+        print("âœ… Session created: \(session.teamName)")
+        
+        // Reset stats for all passers
+        passers.forEach { $0.resetStats() }
+        
+        currentSessionPassers = passers
+        print("âœ… Stored \(currentSessionPassers.count) passers in currentSessionPassers")
+    }
     
     func logPass(
         player: Player,
@@ -243,37 +243,21 @@ class DataStore {
                 session.passerIds.contains(player.id)
             }
         }
+    func deleteSession(_ session: Session) {
+        guard let context = modelContext else { return }
+        context.delete(session)
+        
+        do {
+            try context.save()
+        } catch {
+            print("Failed to delete session: \(error)")
+        }
+    }
     
     // MARK: - Demo Data
             
         func loadDemoData() {
-            guard let context = modelContext else { return }
-            
-            // Check if demo team already exists
-            let existingTeams = fetchAllTeams()
-            if !existingTeams.isEmpty {
-                return  // Demo data already loaded
-            }
-            
-            let demoTeam = Team(name: "Demo Varsity Team")
-            context.insert(demoTeam)
-            
-            let players = [
-                Player(name: "Tyler", number: 4, position: "Libero"),
-                Player(name: "Sam", number: 2, position: "OH"),
-                Player(name: "Max", number: 10, position: "DS"),
-                Player(name: "Tymo", number: 7, position: "OH"),
-                Player(name: "Rat", number: 5, position: "MB", isActive: false),
-                Player(name: "Jon", number: 8, position: "MB", isActive: false)
-            ]
-            
-            for player in players {
-                player.team = demoTeam
-                demoTeam.players.append(player)
-                context.insert(player)
-            }
-            
-            saveContext()
+            // Demo data removed - users create their own teams
         }
     // MARK: - Private Helpers
     

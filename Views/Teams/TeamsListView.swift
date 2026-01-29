@@ -22,7 +22,7 @@ struct TeamsListView: View {
                     List {
                         ForEach(teams) { team in
                             NavigationLink {
-                                TeamDetailView(team: team)
+                                EditTeamSettingsView(team: team)
                             } label: {
                                 TeamRow(team: team)
                             }
@@ -52,9 +52,10 @@ struct TeamsListView: View {
     
     private var emptyState: some View {
         VStack(spacing: 20) {
-            Image(systemName: "person.3.fill")
-                .font(.system(size: 60))
-                .foregroundStyle(.blue)
+            Image("sitting")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 150, height: 150)
             
             Text("No Teams Yet")
                 .font(.title2)
@@ -72,7 +73,7 @@ struct TeamsListView: View {
                     .font(.headline)
                     .foregroundStyle(.white)
                     .padding()
-                    .background(Color.blue)
+                    .background(Color(red: 0.545, green: 0.361, blue: 0.965))
                     .clipShape(RoundedRectangle(cornerRadius: 12))
             }
         }
@@ -135,6 +136,7 @@ struct TeamDetailView: View {
                 // Team Stats Cards
                 teamStatsCards
                 
+                
                 // Performance Trend Chart
                 if filteredSessions.count >= 2 {
                     performanceTrendChart
@@ -155,20 +157,10 @@ struct TeamDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Menu {
-                    Button {
-                        showingAddPlayer = true
-                    } label: {
-                        Label("Add Player", systemImage: "person.badge.plus")
-                    }
-                    
-                    Button(role: .destructive) {
-                        showingDeleteConfirmation = true
-                    } label: {
-                        Label("Delete Team", systemImage: "trash")
-                    }
+                NavigationLink {
+                    EditTeamSettingsView(team: team)
                 } label: {
-                    Image(systemName: "ellipsis.circle")
+                    Text("Edit")
                 }
             }
         }
@@ -200,12 +192,12 @@ struct TeamDetailView: View {
         VStack(spacing: 12) {
             HStack(spacing: 16) {
                 Circle()
-                    .fill(Color.blue.opacity(0.1))
+                    .fill(Color.appPurple.opacity(0.1))
                     .frame(width: 60, height: 60)
                     .overlay {
                         Image(systemName: "person.3.fill")
                             .font(.title2)
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.appPurple)
                     }
                 
                 VStack(alignment: .leading, spacing: 4) {
@@ -260,7 +252,7 @@ struct TeamDetailView: View {
                     title: "Sessions",
                     value: "\(filteredSessions.count)",
                     icon: "calendar",
-                    color: .blue
+                    color: Color.appPurple
                 )
                 
                 StatCard(
@@ -358,7 +350,7 @@ struct TeamDetailView: View {
                     Text("View All (\(team.players.count))")
                         .font(.caption)
                         .fontWeight(.semibold)
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.appPurple)
                 }
             }
             .padding(.horizontal)
@@ -402,7 +394,7 @@ struct TeamDetailView: View {
                         Text("View All (\(filteredSessions.count))")
                             .font(.caption)
                             .fontWeight(.semibold)
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.appPurple)
                     }
                 }
             }
@@ -449,7 +441,7 @@ struct TeamDetailView: View {
                 QuickActionButton(
                     title: "Manage Roster",
                     icon: "person.3.fill",
-                    color: .blue
+                    color: Color.appPurple
                 )
             }
             
@@ -577,7 +569,7 @@ struct PerformanceTrendLineChart: View {
                             
                             // Line path
                             linePath(geometry: geometry)
-                                .stroke(Color.blue, style: StrokeStyle(lineWidth: 3, lineCap: .round, lineJoin: .round))
+                                .stroke(Color.appPurple, style: StrokeStyle(lineWidth: 3, lineCap: .round, lineJoin: .round))
                             
                             // Data points
                             dataPoints(geometry: geometry)
@@ -683,7 +675,7 @@ struct PerformanceTrendLineChart: View {
             let y = height * (1 - normalizedValue)
             
             Circle()
-                .fill(Color.blue)
+                .fill(Color.appPurple)
                 .frame(width: 8, height: 8)
                 .position(x: x, y: y)
                 .overlay(
@@ -878,7 +870,7 @@ struct PlayerStatRow: View {
             Text("#\(stat.playerNumber)")
                 .font(.subheadline)
                 .fontWeight(.bold)
-                .foregroundStyle(.blue)
+                .foregroundStyle(Color.appPurple)
                 .frame(width: 40, alignment: .leading)
             
             Text(stat.playerName)
@@ -983,5 +975,128 @@ struct TeamSessionsListView: View {
         }
         .navigationTitle("All Sessions")
         .background(Color(.systemGroupedBackground))
+    }
+}
+// MARK: - Edit Team Settings View
+struct EditTeamSettingsView: View {
+    @Environment(DataStore.self) private var dataStore
+    @Environment(\.dismiss) private var dismiss
+    @Bindable var team: Team
+    @State private var showingAddPlayer = false
+    @State private var showingDeleteConfirmation = false
+    
+    var body: some View {
+        Form {
+            Section {
+                HStack {
+                    Text("Name")
+                    Spacer()
+                    TextField("Team Name", text: $team.name)
+                        .multilineTextAlignment(.trailing)
+                }
+                
+                HStack {
+                    Text("Zone Type")
+                    Spacer()
+                    Text(team.zoneType.rawValue)
+                        .foregroundStyle(.secondary)
+                }
+            } header: {
+                Text("Team Info")
+            }
+            
+            Section {
+                VStack(spacing: 12) {
+                    HStack {
+                        Text("Good Pass Threshold")
+                            .font(.subheadline)
+                        Spacer()
+                        Text(String(format: "%.1f", team.goodPassThreshold))
+                            .font(.headline)
+                            .fontWeight(.bold)
+                            .foregroundStyle(Color(red: 0.545, green: 0.361, blue: 0.965))
+                    }
+                    
+                    HStack(spacing: 12) {
+                        Text("0.0")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        
+                        Slider(value: $team.goodPassThreshold, in: 0.0...3.0, step: 0.1)
+                            .tint(Color(red: 0.545, green: 0.361, blue: 0.965))
+                        
+                        Text("3.0")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            } header: {
+                Text("Pass Threshold")
+            } footer: {
+                Text("Passes with score ≥ \(String(format: "%.1f", team.goodPassThreshold)) count as 'good'")
+            }
+            
+            Section {
+                ForEach(team.players) { player in
+                    HStack {
+                        Text("#\(player.number)")
+                            .fontWeight(.bold)
+                            .frame(width: 40)
+                        Text(player.name)
+                        Spacer()
+                        if let position = player.position {
+                            Text(position)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+                .onDelete(perform: deletePlayers)
+                
+                Button {
+                    showingAddPlayer = true
+                } label: {
+                    Label("Add Player", systemImage: "plus")
+                }
+            } header: {
+                Text("Roster (\(team.players.count))")
+            }
+            
+            Section {
+                Button(role: .destructive) {
+                    showingDeleteConfirmation = true
+                } label: {
+                    HStack {
+                        Spacer()
+                        Text("Delete Team")
+                        Spacer()
+                    }
+                }
+            }
+        }
+        .navigationTitle("Edit Team")
+        .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showingAddPlayer) {
+            AddPlayerSheet(isPresented: $showingAddPlayer) { name, number, position in
+                let newPlayer = Player(name: name, number: number, position: position)
+                dataStore.addPlayer(to: team, player: newPlayer)
+            }
+        }
+        .alert("Delete Team?", isPresented: $showingDeleteConfirmation) {
+            Button("Cancel", role: .cancel) { }
+            Button("Delete", role: .destructive) {
+                dataStore.deleteTeam(team)
+                dismiss()
+            }
+        } message: {
+            Text("This will permanently delete \(team.name) and all associated data.")
+        }
+    }
+    
+    private func deletePlayers(at offsets: IndexSet) {
+        for index in offsets {
+            let player = team.players[index]
+            dataStore.removePlayer(from: team, player: player)
+        }
     }
 }

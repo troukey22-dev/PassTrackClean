@@ -41,6 +41,8 @@ struct PassTrackCleanApp: App {
         WindowGroup {
             ContentView()
                 .modelContainer(modelContainer)
+                .tint(Color.appPurple)
+
         }
     }
 }

@@ -16,19 +16,19 @@ struct SettingsView: View {
         NavigationStack {
             Form {
                 // Teams Section
-                  Section {
+                Section {
                     NavigationLink {
                         TeamsListView()
                     } label: {
                         HStack {
                             Image(systemName: "person.3.fill")
-                                .foregroundStyle(.blue)
+                                .foregroundStyle(Color(red: 0.545, green: 0.361, blue: 0.965))
                                 .frame(width: 30)
                             
                             VStack(alignment: .leading, spacing: 2) {
                                 Text("Manage Teams")
                                     .font(.body)
-                                Text("\(teams.count) team\(teams.count == 1 ? "" : "s")")
+                                Text("Edit names, rosters, and settings")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                             }
@@ -37,23 +37,7 @@ struct SettingsView: View {
                 } header: {
                     Text("Teams")
                 }
-                
-                // Scoring Section
-                Section {
-                    Picker("Scoring System", selection: Binding(
-                        get: { dataStore.settings.scoringSystem },
-                        set: { dataStore.settings.scoringSystem = $0 }
-                    )) {
-                        ForEach(AppSettings.ScoringSystem.allCases, id: \.self) { system in
-                            Text(system.rawValue).tag(system)
-                        }
-                    }
-                } header: {
-                    Text("Scoring")
-                } footer: {
-                    Text("Current system uses 0-3 scale (Ace, Poor, Good, Perfect)")
-                }
-                
+
                 // Default Data Fields Section
                 Section {
                     Toggle("Zone Tracking", isOn: Binding(
@@ -92,16 +76,11 @@ struct SettingsView: View {
                                         get: { dataStore.settings.enableHaptics },
                                         set: { dataStore.settings.enableHaptics = $0 }
                                     ))
-                                    Toggle("Show Player Photos", isOn: Binding(
-                                        get: { dataStore.settings.showPlayerPhotos },
-                                        set: { dataStore.settings.showPlayerPhotos = $0 }
-                                    ))
                                 } header: {
                                     Text("Interface")
                                 } footer: {
                                     Text("Compact view fits more players on screen with smaller tiles")
                                 }
-                
                 // About Section
                 Section {
                     HStack {
@@ -130,8 +109,8 @@ struct SettingsView: View {
     }
 }
 
+
 #Preview {
     SettingsView()
         .environment(DataStore())
-        .modelContainer(for: [Team.self, Player.self, Session.self, Rally.self])
 }

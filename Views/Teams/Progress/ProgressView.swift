@@ -83,7 +83,7 @@ struct ProgressView: View {
                                 .foregroundStyle(.secondary)
                             
                             if session.rallyCount > 0 {
-                                Text("•")
+                                Text("â€¢")
                                     .foregroundStyle(.secondary)
                                 Text(String(format: "%.2f avg", session.teamAverage))
                                     .font(.subheadline)
@@ -144,7 +144,7 @@ struct ProgressView: View {
                         Text("View All Teams (\(teams.count))")
                             .font(.subheadline)
                             .fontWeight(.semibold)
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.appPurple)
                         Spacer()
                         Image(systemName: "chevron.right")
                             .font(.caption)
@@ -186,7 +186,7 @@ struct ProgressView: View {
                         Text("View All Sessions (\(allSessions.count))")
                             .font(.subheadline)
                             .fontWeight(.semibold)
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.appPurple)
                         Spacer()
                         Image(systemName: "chevron.right")
                             .font(.caption)
@@ -205,9 +205,10 @@ struct ProgressView: View {
         VStack(spacing: 20) {
             Spacer()
             
-            Image(systemName: "chart.bar.fill")
-                .font(.system(size: 60))
-                .foregroundStyle(.blue)
+            Image("graph")  // Change to "question" or "graph" potentially
+                .resizable()
+                .scaledToFit()
+                .frame(width: 150, height: 150)
             
             Text("No Sessions Yet")
                 .font(.title2)
@@ -250,15 +251,17 @@ struct TeamCard: View {
     
     var body: some View {
         HStack(spacing: 16) {
-            // Team icon
+            // Team icon with custom colors
             Circle()
-                .fill(Color.blue.opacity(0.1))
+                .fill(Color(hex: team.backgroundColor))
                 .frame(width: 56, height: 56)
                 .overlay {
-                    Image(systemName: "person.3.fill")
-                        .font(.title3)
-                        .foregroundStyle(.blue)
+                    Image("headband-\(team.mascotColor)")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 46, height: 46)
                 }
+                .shadow(color: .black.opacity(0.1), radius: 4, y: 2)
             
             // Team info
             VStack(alignment: .leading, spacing: 4) {
@@ -321,12 +324,12 @@ struct SessionRow: View {
         HStack(spacing: 16) {
             // Session icon
             Circle()
-                .fill(Color.blue.opacity(0.1))
+                .fill(Color.appPurple.opacity(0.1))
                 .frame(width: 56, height: 56)
                 .overlay {
                     Image(systemName: "chart.bar.fill")
                         .font(.title3)
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.appPurple)
                 }
             
             // Session info
@@ -337,7 +340,7 @@ struct SessionRow: View {
                         .fontWeight(.semibold)
                         .foregroundStyle(.primary)
                     
-                    Text("•")
+                    Text("â€¢")
                         .foregroundStyle(.secondary)
                     
                     Text(session.startTime, style: .date)
@@ -350,7 +353,7 @@ struct SessionRow: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                     
-                    Text("•")
+                    Text("â€¢")
                         .foregroundStyle(.secondary)
                     
                     Text(String(format: "%.1f avg", session.teamAverage))

@@ -100,7 +100,7 @@ struct PlayerComparisonView: View {
                         Text("Select Players to Compare")
                             .font(.headline)
                     }
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.appPurple)
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(Color(.systemBackground))
@@ -125,7 +125,7 @@ struct PlayerComparisonView: View {
                                 Text("Add Another Player")
                                     .font(.subheadline)
                             }
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.appPurple)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 12)
                             .background(Color(.systemBackground))
@@ -338,9 +338,10 @@ struct PlayerComparisonView: View {
     // MARK: - Empty State
     private var emptyState: some View {
         VStack(spacing: 20) {
-            Image(systemName: "person.2.fill")
-                .font(.system(size: 60))
-                .foregroundStyle(.blue)
+            Image("idea")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 120, height: 120)
             
             Text("Select 2-4 Players")
                 .font(.title2)
@@ -538,13 +539,13 @@ struct SelectedPlayerRow: View {
     var body: some View {
         HStack(spacing: 12) {
             Circle()
-                .fill(Color.blue.opacity(0.1))
+                .fill(Color.appPurple.opacity(0.1))
                 .frame(width: 40, height: 40)
                 .overlay {
                     Text("#\(player.number)")
                         .font(.subheadline)
                         .fontWeight(.bold)
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.appPurple)
                 }
             
             VStack(alignment: .leading, spacing: 2) {
@@ -615,13 +616,13 @@ struct PlayerPickerSheet: View {
                             
                             if selectedPlayers.contains(player.id) {
                                 Image(systemName: "checkmark.circle.fill")
-                                    .foregroundStyle(.blue)
+                                    .foregroundStyle(Color.appPurple)
                             } else if selectedPlayers.count >= 4 {
                                 Image(systemName: "circle")
                                     .foregroundStyle(.gray)
                             } else {
                                 Image(systemName: "circle")
-                                    .foregroundStyle(.blue)
+                                    .foregroundStyle(Color.appPurple)
                             }
                         }
                         .contentShape(Rectangle())
@@ -658,7 +659,7 @@ struct ComparisonMetricCard: View {
         VStack(spacing: 12) {
             HStack {
                 Image(systemName: icon)
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.appPurple)
                 Text(title)
                     .font(.subheadline)
                     .fontWeight(.semibold)
@@ -678,7 +679,7 @@ struct ComparisonMetricCard: View {
                                 .fill(Color(.systemGray5))
                             
                             Rectangle()
-                                .fill(Color.blue)
+                                .fill(Color.appPurple)
                                 .frame(width: maxValue > 0 ? geometry.size.width * (value / maxValue) : 0)
                         }
                     }
@@ -704,7 +705,7 @@ struct ComparisonMetricCard: View {
 struct MultiPlayerComparisonChart: View {
     let playerData: [(Player, [PlayerComparisonSessionStat])]
     
-    private let colors: [Color] = [.blue, .green, .orange, .purple]
+    private let colors: [Color] = [Color.appPurple, .green, .orange, .purple]
     
     var body: some View {
         VStack(spacing: 16) {

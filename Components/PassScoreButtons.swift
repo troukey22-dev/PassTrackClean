@@ -18,19 +18,25 @@ struct PassScoreButtons: View {
     var body: some View {
         Button(action: action) {
             VStack(spacing: 8) {
-                Text(emoji)
-                    .font(.system(size: 40))
+                // Show emoji and label only if they're not empty (old style)
+                if !emoji.isEmpty {
+                    Text(emoji)
+                        .font(.system(size: 40))
+                }
                 
                 Text("\(score)")
-                    .font(.system(size: 32, weight: .bold, design: .rounded))
+                    .font(.system(size: emoji.isEmpty ? 90 : 32, weight: .heavy, design: .rounded))
+                    .foregroundStyle(isSelected && emoji.isEmpty ? .white : .primary)
                 
-                Text(label)
-                    .font(.caption)
-                    .fontWeight(.medium)
+                if !label.isEmpty {
+                    Text(label)
+                        .font(.caption)
+                        .fontWeight(.medium)
+                }
             }
             .frame(maxWidth: .infinity)
-            .frame(height: 120)
-            .background(isSelected ? color.opacity(0.2) : Color(.secondarySystemBackground))
+            .frame(maxHeight: .infinity)
+            .background(isSelected ? color : Color(.systemGray6))
             .clipShape(RoundedRectangle(cornerRadius: 16))
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
@@ -91,6 +97,30 @@ extension PassScoreButtons {
                 isSelected: isSelected,
                 action: action
             )
+        }
+        
+    }
+    static func tallScoreButton(score: Int, isSelected: Bool, action: @escaping () -> Void) -> PassScoreButtons {
+        let (color, _) = scoreProperties(for: score)
+        
+        return PassScoreButtons(
+            score: score,
+            label: "",  // No label
+            emoji: "",  // No emoji
+            color: color,
+            isSelected: isSelected,
+            action: action
+        )
+    }
+    
+    // Helper function to get color for each score
+    private static func scoreProperties(for score: Int) -> (color: Color, label: String) {
+        switch score {
+        case 3: return (.scorePerfect, "Perfect")
+        case 2: return (.scoreGood, "Good")
+        case 1: return (.scorePoor, "Poor")
+        case 0: return (.scoreAce, "Ace")
+        default: return (.gray, "Unknown")
         }
     }
 }
