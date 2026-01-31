@@ -479,9 +479,12 @@ struct TeamQuickStartView: View {
                     .overlay {
                         Image("headband-\(team.mascotColor)")
                             .resizable()
-                            .scaledToFit()
-                            .frame(width: 46, height: 46)
+                            .scaledToFill()
+                            .frame(width: 56, height: 56)
+                            .scaleEffect(1.5)
+                            .offset(y: 4)
                     }
+                    .clipShape(Circle())
                     .shadow(color: .black.opacity(0.1), radius: 4, y: 2)
                 // Team info
                 VStack(alignment: .leading, spacing: 4) {

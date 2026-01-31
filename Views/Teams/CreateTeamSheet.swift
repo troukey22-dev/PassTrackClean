@@ -66,6 +66,32 @@ struct CreateTeamSheet: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
+                // Custom header with title and cancel button
+                HStack {
+                    Button("Cancel") {
+                        isPresented = false
+                        dismiss()
+                    }
+                    .foregroundStyle(Color(red: 0.545, green: 0.361, blue: 0.965))
+                    .opacity(currentStep == .success ? 0 : 1)
+                    
+                    Spacer()
+                    
+                    Text("Create Team")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                    
+                    Spacer()
+                    
+                    // Invisible button for symmetry
+                    Button("Cancel") {
+                    }
+                    .foregroundStyle(Color(red: 0.545, green: 0.361, blue: 0.965))
+                    .opacity(0)
+                }
+                .padding()
+                .background(Color(.systemGroupedBackground))
+                
                 // Progress dots
                 progressIndicator
                 
@@ -89,51 +115,22 @@ struct CreateTeamSheet: View {
                     removal: .move(edge: isMovingForward ? .leading : .trailing).combined(with: .opacity)
                 ))
             }
-            .navigationTitle("Create Team")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    if currentStep == .success {
-                        EmptyView()
-                    } else {
-                        Button("Cancel") {
-                            isPresented = false
-                            dismiss()
-                        }
-                    }
-                }
-            }
+            .background(Color(.systemGroupedBackground))
+            .navigationBarHidden(true)
         }
     }
     
     // MARK: - Progress Indicator
     private var progressIndicator: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 8) {
             ForEach(CreationStep.allCases, id: \.self) { step in
-                VStack(spacing: 4) {
-                    Circle()
-                        .fill(step.rawValue <= currentStep.rawValue ? Color(red: 0.545, green: 0.361, blue: 0.965) : Color(.systemGray4))
-                        .frame(width: 12, height: 12)
-                    
-                    if step.rawValue <= currentStep.rawValue {
-                        Text(step.title)
-                            .font(.caption2)
-                            .fontWeight(.semibold)
-                            .foregroundStyle(Color(red: 0.545, green: 0.361, blue: 0.965))
-                    } else {
-                        Text(step.title)
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                    }
-                }
+                Circle()
+                    .fill(step.rawValue <= currentStep.rawValue ? Color(red: 0.545, green: 0.361, blue: 0.965) : Color(.systemGray4))
+                    .frame(width: 8, height: 8)
             }
         }
         .padding(.vertical, 12)
-        .padding(.horizontal)
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .shadow(color: .black.opacity(0.05), radius: 4, y: 2)
-        .padding()
+        .background(Color(.systemGroupedBackground))
     }
     
     // MARK: - Step 1: Team Info
@@ -210,7 +207,8 @@ struct CreateTeamSheet: View {
                 }
                 .disabled(teamName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
-            .padding()
+            .padding(.horizontal)
+            .padding(.bottom, 16)
             .background(Color(.systemBackground))
         }
     }
@@ -302,7 +300,8 @@ struct CreateTeamSheet: View {
                         .foregroundStyle(Color(red: 0.545, green: 0.361, blue: 0.965))
                 }
             }
-            .padding()
+            .padding(.horizontal)
+            .padding(.bottom, 16)
             .background(Color(.systemBackground))
         }
     }
@@ -326,6 +325,7 @@ struct CreateTeamSheet: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
                 .background(
                     SpeechBubble(tailPosition: .left)
@@ -333,15 +333,13 @@ struct CreateTeamSheet: View {
                         .shadow(color: .black.opacity(0.05), radius: 4, y: 2)
                 )
                 .padding(.leading, 8)
-                
-                Spacer()
             }
             .padding()
             .background(Color(.systemGroupedBackground))
             
             // Color selection
             ScrollView {
-                VStack(spacing: 24) {
+                VStack(spacing: 32) {
                     // Preview
                     VStack(spacing: 12) {
                         Text("PREVIEW")
@@ -355,19 +353,22 @@ struct CreateTeamSheet: View {
                             .overlay {
                                 Image("headband-\(selectedMascotColor)")
                                     .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 100, height: 100)
+                                    .scaledToFill()
+                                    .frame(width: 120, height: 120)
+                                    .scaleEffect(1.5)
+                                    .offset(y: 12)
                             }
+                            .clipShape(Circle())
                             .shadow(color: .black.opacity(0.1), radius: 8, y: 4)
                     }
-                    .padding()
                     
                     // Mascot Color Selection
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 16) {
                         Text("MASCOT COLOR")
                             .font(.caption)
                             .fontWeight(.semibold)
                             .foregroundStyle(.secondary)
+                            .padding(.horizontal)
                         
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 12) {
@@ -382,9 +383,6 @@ struct CreateTeamSheet: View {
                                                 .resizable()
                                                 .scaledToFit()
                                                 .frame(width: 60, height: 60)
-                                                .padding(8)
-                                                .background(Color(.systemGray6))
-                                                .clipShape(Circle())
                                                 .overlay(
                                                     Circle()
                                                         .stroke(selectedMascotColor == color ? Color(red: 0.545, green: 0.361, blue: 0.965) : Color.clear, lineWidth: 3)
@@ -399,46 +397,46 @@ struct CreateTeamSheet: View {
                                 }
                             }
                             .padding(.horizontal)
+                            .padding(.vertical, 4)
                         }
                     }
                     
                     // Background Color Selection
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 16) {
                         Text("BACKGROUND COLOR")
                             .font(.caption)
                             .fontWeight(.semibold)
                             .foregroundStyle(.secondary)
+                            .padding(.horizontal)
                         
-                        LazyVGrid(columns: [
-                            GridItem(.flexible()),
-                            GridItem(.flexible()),
-                            GridItem(.flexible()),
-                            GridItem(.flexible())
-                        ], spacing: 12) {
-                            ForEach(backgroundColors, id: \.hex) { bgColor in
-                                Button {
-                                    withAnimation(.spring(response: 0.3)) {
-                                        selectedBackgroundColor = bgColor.hex
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 12) {
+                                ForEach(backgroundColors, id: \.hex) { bgColor in
+                                    Button {
+                                        withAnimation(.spring(response: 0.3)) {
+                                            selectedBackgroundColor = bgColor.hex
+                                        }
+                                    } label: {
+                                        VStack(spacing: 8) {
+                                            Circle()
+                                                .fill(Color(hex: bgColor.hex))
+                                                .frame(width: 60, height: 60)
+                                                .overlay(
+                                                    Circle()
+                                                        .stroke(selectedBackgroundColor == bgColor.hex ? Color(red: 0.545, green: 0.361, blue: 0.965) : Color.clear, lineWidth: 3)
+                                                )
+                                            
+                                            Text(bgColor.name)
+                                                .font(.caption2)
+                                                .foregroundStyle(selectedBackgroundColor == bgColor.hex ? Color(red: 0.545, green: 0.361, blue: 0.965) : .secondary)
+                                        }
                                     }
-                                } label: {
-                                    VStack(spacing: 6) {
-                                        Circle()
-                                            .fill(Color(hex: bgColor.hex))
-                                            .frame(width: 50, height: 50)
-                                            .overlay(
-                                                Circle()
-                                                    .stroke(selectedBackgroundColor == bgColor.hex ? Color(red: 0.545, green: 0.361, blue: 0.965) : Color.clear, lineWidth: 3)
-                                            )
-                                        
-                                        Text(bgColor.name)
-                                            .font(.caption2)
-                                            .foregroundStyle(selectedBackgroundColor == bgColor.hex ? Color(red: 0.545, green: 0.361, blue: 0.965) : .secondary)
-                                    }
+                                    .buttonStyle(.plain)
                                 }
-                                .buttonStyle(.plain)
                             }
+                            .padding(.horizontal)
+                            .padding(.vertical, 4)
                         }
-                        .padding(.horizontal)
                     }
                 }
                 .padding(.vertical)
@@ -475,7 +473,8 @@ struct CreateTeamSheet: View {
                         .foregroundStyle(Color(red: 0.545, green: 0.361, blue: 0.965))
                 }
             }
-            .padding()
+            .padding(.horizontal)
+            .padding(.bottom, 16)
             .background(Color(.systemBackground))
         }
     }
@@ -534,7 +533,7 @@ struct CreateTeamSheet: View {
                     
                     Spacer()
                 }
-                .frame(maxHeight: .infinity)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color(.systemGroupedBackground))
             }
             else {
@@ -592,17 +591,19 @@ struct CreateTeamSheet: View {
                     Button {
                         createTeamAndFinish()
                     } label: {
-                        Text(players.isEmpty ? "Skip & Create" : "Create Team")
+                        Text("Create Team")
                             .font(.headline)
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color.green)
+                            .background(players.isEmpty ? Color.gray : Color.green)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
+                    .disabled(players.isEmpty)
                 }
             }
-            .padding()
+            .padding(.horizontal)
+            .padding(.bottom, 16)
             .background(Color(.systemBackground))
         }
         .sheet(isPresented: $showingAddPlayer) {
@@ -684,7 +685,8 @@ struct CreateTeamSheet: View {
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
             }
-            .padding()
+            .padding(.horizontal)
+            .padding(.bottom, 16)
             .background(Color(.systemBackground))
         }
         .background(Color(.systemGroupedBackground))

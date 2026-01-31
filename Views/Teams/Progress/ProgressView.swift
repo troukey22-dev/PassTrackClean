@@ -234,8 +234,8 @@ struct ProgressView: View {
             
             Spacer()
         }
-        .frame(maxHeight: .infinity)
-        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(.systemGroupedBackground))
     }
     
     // MARK: - Helper Functions
