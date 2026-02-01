@@ -40,8 +40,8 @@ struct TeamQuickStartView: View {
                 HStack {
                     Image(systemName: "volleyball.fill")
                         .font(.title2)
-                        .foregroundStyle(Color(red: 0.545, green: 0.361, blue: 0.965))
-                    Text("Serve-Receive")
+                        .foregroundStyle(Color.appPurple)
+                    Text("PerfectPass")
                         .font(.title2)
                         .fontWeight(.bold)
                 }
@@ -68,8 +68,10 @@ struct TeamQuickStartView: View {
                     }
                     .padding()
                 }
+                .background(Color(.systemGroupedBackground))
             }
         }
+        .background(Color(.systemGroupedBackground))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
@@ -165,10 +167,10 @@ struct TeamQuickStartView: View {
         }
         
         var body: some View {
-            let _ = print("ðŸ” SessionConfigurationFlow rendering")
-            let _ = print("ðŸ” Team: \(team.name)")
-            let _ = print("ðŸ” Players count: \(team.players.count)")
-            let _ = print("ðŸ” Active players: \(team.activePlayers.count)")
+            let _ = print("Ã°Å¸â€Â SessionConfigurationFlow rendering")
+            let _ = print("Ã°Å¸â€Â Team: \(team.name)")
+            let _ = print("Ã°Å¸â€Â Players count: \(team.players.count)")
+            let _ = print("Ã°Å¸â€Â Active players: \(team.activePlayers.count)")
             
             NavigationStack {
                 Group {
@@ -239,7 +241,7 @@ struct TeamQuickStartView: View {
                             team.players.forEach { $0.isActive = true }
                         }
                         .font(.subheadline)
-                        .foregroundStyle(Color(red: 0.545, green: 0.361, blue: 0.965))
+                        .foregroundStyle(Color.appPurple)
                     }
                     
                     Button {
@@ -252,7 +254,7 @@ struct TeamQuickStartView: View {
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(team.activePlayers.isEmpty ? Color.gray : Color(red: 0.545, green: 0.361, blue: 0.965))
+                            .background(team.activePlayers.isEmpty ? Color.gray : Color.appPurple)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
                     .disabled(team.activePlayers.isEmpty)
@@ -449,7 +451,7 @@ struct TeamQuickStartView: View {
                         Text(player.name)
                             .font(.body)
                             .fontWeight(.semibold)
-                        Text("#\(player.number) - \(player.position ?? "Player")")
+                        Text("#\(player.number) Ã¢â‚¬Â¢ \(player.position ?? "Player")")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -479,13 +481,12 @@ struct TeamQuickStartView: View {
                     .overlay {
                         Image("headband-\(team.mascotColor)")
                             .resizable()
-                            .scaledToFill()
-                            .frame(width: 56, height: 56)
-                            .scaleEffect(1.5)
-                            .offset(y: 4)
+                            .scaledToFit()
+                            .frame(width: 46, height: 46)
+                            .offset(y: 2)
                     }
-                    .clipShape(Circle())
                     .shadow(color: .black.opacity(0.1), radius: 4, y: 2)
+                
                 // Team info
                 VStack(alignment: .leading, spacing: 4) {
                     Text(team.name)
@@ -506,12 +507,12 @@ struct TeamQuickStartView: View {
                         .foregroundStyle(.white)
                         .padding(.horizontal, 20)
                         .padding(.vertical, 10)
-                        .background(Color(red: 0.545, green: 0.361, blue: 0.965))
+                        .background(Color.appPurple)
                         .clipShape(Capsule())
                 }
             }
             .padding(16)
-            .background(Color(.secondarySystemBackground))
+            .background(Color(.systemBackground))
             .clipShape(RoundedRectangle(cornerRadius: 16))
             .shadow(color: .black.opacity(0.05), radius: 4, y: 2)
         }
@@ -552,7 +553,7 @@ struct TeamQuickStartView: View {
                         if player.isActive {
                             Image(systemName: "checkmark")
                                 .font(.system(size: 14, weight: .bold))
-                                .foregroundStyle(Color(red: 0.545, green: 0.361, blue: 0.965))
+                                .foregroundStyle(Color.appPurple)
                         }
                     }
                 }
@@ -584,7 +585,7 @@ struct TeamQuickStartView: View {
                     // Icon
                     Image(systemName: icon)
                         .font(.title2)
-                        .foregroundStyle(isSelected ? .white : Color(red: 0.545, green: 0.361, blue: 0.965))
+                        .foregroundStyle(isSelected ? .white : Color.appPurple)
                         .frame(width: 30)
                     
                     // Text
@@ -610,7 +611,7 @@ struct TeamQuickStartView: View {
                         if isSelected {
                             Image(systemName: "checkmark")
                                 .font(.system(size: 14, weight: .bold))
-                                .foregroundStyle(Color(red: 0.545, green: 0.361, blue: 0.965))
+                                .foregroundStyle(Color.appPurple)
                         }
                     }
                 }

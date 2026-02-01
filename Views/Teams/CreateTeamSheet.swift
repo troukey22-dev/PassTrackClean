@@ -89,7 +89,9 @@ struct CreateTeamSheet: View {
                     .foregroundStyle(Color(red: 0.545, green: 0.361, blue: 0.965))
                     .opacity(0)
                 }
-                .padding()
+                .padding(.horizontal)
+                .padding(.top, 8)
+                .padding(.bottom, 12)
                 .background(Color(.systemGroupedBackground))
                 
                 // Progress dots
@@ -298,6 +300,14 @@ struct CreateTeamSheet: View {
                     Text("Back")
                         .font(.subheadline)
                         .foregroundStyle(Color(red: 0.545, green: 0.361, blue: 0.965))
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color(.systemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color(red: 0.545, green: 0.361, blue: 0.965), lineWidth: 2)
+                        )
                 }
             }
             .padding(.horizontal)
@@ -471,6 +481,14 @@ struct CreateTeamSheet: View {
                     Text("Back")
                         .font(.subheadline)
                         .foregroundStyle(Color(red: 0.545, green: 0.361, blue: 0.965))
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color(.systemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color(red: 0.545, green: 0.361, blue: 0.965), lineWidth: 2)
+                        )
                 }
             }
             .padding(.horizontal)

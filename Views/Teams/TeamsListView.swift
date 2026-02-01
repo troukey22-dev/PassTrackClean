@@ -115,8 +115,7 @@ struct TeamDetailView: View {
     @State private var showingAddPlayer = false
     @State private var showingDeleteConfirmation = false
     @State private var dateFilter: DateFilter = .last30Days
-    @State private var showingExportShare = false
-    @State private var exportURL: URL?
+    @State private var exportItem: ShareItem?
     
     enum DateFilter: String, CaseIterable {
         case last7Days = "Last 7 Days"
@@ -165,11 +164,9 @@ struct TeamDetailView: View {
             }
         }
         .background(Color(.systemGroupedBackground))
-                .sheet(isPresented: $showingExportShare) {
-                    if let url = exportURL {
-                        ShareSheet(items: [url])
-                    }
-                }
+        .sharePresentation(item: $exportItem) { item in
+            [item.url]
+        }
                 .sheet(isPresented: $showingAddPlayer) {
                     AddPlayerSheet(isPresented: $showingAddPlayer) { name, number, position in
                 let newPlayer = Player(name: name, number: number, position: position)
@@ -192,13 +189,16 @@ struct TeamDetailView: View {
         VStack(spacing: 12) {
             HStack(spacing: 16) {
                 Circle()
-                    .fill(Color.appPurple.opacity(0.1))
+                    .fill(Color(hex: team.backgroundColor))
                     .frame(width: 60, height: 60)
                     .overlay {
-                        Image(systemName: "person.3.fill")
-                            .font(.title2)
-                            .foregroundStyle(Color.appPurple)
+                        Image("headband-\(team.mascotColor)")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 50, height: 50)
+                            .offset(y: 2)
                     }
+                    .shadow(color: .black.opacity(0.1), radius: 4, y: 2)
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(team.name)
@@ -357,7 +357,16 @@ struct TeamDetailView: View {
             
             VStack(spacing: 8) {
                 ForEach(topPerformers.prefix(5)) { stat in
-                    PlayerStatRow(stat: stat)
+                    if let player = team.players.first(where: { $0.id == stat.playerId }) {
+                        NavigationLink {
+                            PlayerDetailView(player: player, team: team)
+                        } label: {
+                            PlayerStatRow(stat: stat)
+                        }
+                        .buttonStyle(.plain)
+                    } else {
+                        PlayerStatRow(stat: stat)
+                    }
                 }
                 
                 if team.players.isEmpty {
@@ -532,8 +541,7 @@ struct TeamDetailView: View {
     }
     private func exportTeamReport() {
         if let url = ExportManager.exportTeamToPDF(team: team, sessions: filteredSessions) {
-            exportURL = url
-            showingExportShare = true
+            exportItem = ShareItem(url: url, type: .pdf)
         }
     }
 }
@@ -888,6 +896,10 @@ struct PlayerStatRow: View {
                 .fontWeight(.bold)
                 .foregroundStyle(averageColor(stat.average))
                 .frame(width: 50, alignment: .trailing)
+            
+            Image(systemName: "chevron.right")
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
         .padding(.horizontal)
     }
@@ -938,15 +950,19 @@ struct FullRosterView: View {
     var body: some View {
         List {
             ForEach(team.players) { player in
-                HStack {
-                    Text("#\(player.number)")
-                        .fontWeight(.bold)
-                    Text(player.name)
-                    Spacer()
-                    if let position = player.position {
-                        Text(position)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                NavigationLink {
+                    PlayerDetailView(player: player, team: team)
+                } label: {
+                    HStack {
+                        Text("#\(player.number)")
+                            .fontWeight(.bold)
+                        Text(player.name)
+                        Spacer()
+                        if let position = player.position {
+                            Text(position)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                 }
             }
@@ -1033,7 +1049,7 @@ struct EditTeamSettingsView: View {
             } header: {
                 Text("Pass Threshold")
             } footer: {
-                Text("Passes with score ≥ \(String(format: "%.1f", team.goodPassThreshold)) count as 'good'")
+                Text("Passes with score Ã¢â€°Â¥ \(String(format: "%.1f", team.goodPassThreshold)) count as 'good'")
             }
             
             Section {

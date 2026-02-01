@@ -34,6 +34,7 @@
 		AD37976C2F159FF500D91F92 /* SessionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD37976B2F159FEE00D91F92 /* SessionDetailView.swift */; };
 		AD4B38B72F21373D008F5505 /* Colors+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD4B38B62F213738008F5505 /* Colors+Extension.swift */; };
 		AD4B38C12F25D732008F5505 /* SpeechBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD4B38C02F25D72B008F5505 /* SpeechBubble.swift */; };
+		ADD60C2C2F2DC44200042DDF /* PlayerSessionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADD60C2B2F2DC43300042DDF /* PlayerSessionDetailView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -65,6 +66,7 @@
 		AD37976B2F159FEE00D91F92 /* SessionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionDetailView.swift; sourceTree = "<group>"; };
 		AD4B38B62F213738008F5505 /* Colors+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Colors+Extension.swift"; sourceTree = "<group>"; };
 		AD4B38C02F25D72B008F5505 /* SpeechBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechBubble.swift; sourceTree = "<group>"; };
+		ADD60C2B2F2DC43300042DDF /* PlayerSessionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSessionDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -144,6 +146,7 @@
 		AD37973F2F10A32400D91F92 /* Teams */ = {
 			isa = PBXGroup;
 			children = (
+				ADD60C2B2F2DC43300042DDF /* PlayerSessionDetailView.swift */,
 				AD2E0BE52F17F1EA00779C4D /* AdvancedSessionFilterView.swift */,
 				AD3797412F10A32E00D91F92 /* Progress */,
 				AD2E0BE32F17EE4800779C4D /* PlayerComparisonView.swift */,
@@ -286,6 +289,7 @@
 				AD3797592F10A8B800D91F92 /* Team.swift in Sources */,
 				AD2E0BDC2F167E6F00779C4D /* ConfigureFieldsView.swift in Sources */,
 				AD37975A2F10A8B800D91F92 /* Player.swift in Sources */,
+				ADD60C2C2F2DC44200042DDF /* PlayerSessionDetailView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

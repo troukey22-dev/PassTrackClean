@@ -13,8 +13,7 @@ struct SessionDetailView: View {
     @Environment(\.dismiss) private var dismiss
     let session: Session
     @State private var passers: [Player] = []
-    @State private var showingShareSheet = false
-    @State private var shareURL: URL?
+    @State private var shareItem: ShareItem?
     @State private var showingDeleteConfirmation = false
     
     
@@ -81,10 +80,8 @@ struct SessionDetailView: View {
                         }
                     }
                 }
-                .sheet(isPresented: $showingShareSheet) {
-                    if let url = shareURL {
-                        ShareSheet(items: [url])
-                    }
+                .sharePresentation(item: $shareItem) { item in
+                    [item.url]
                 }
                 .alert("Delete Session?", isPresented: $showingDeleteConfirmation) {
                     Button("Cancel", role: .cancel) { }
@@ -102,15 +99,13 @@ struct SessionDetailView: View {
     
     private func exportSessionAsPDF() {
         if let url = ExportManager.exportSessionToPDF(session: session, passers: passers) {
-            shareURL = url
-            showingShareSheet = true
+            shareItem = ShareItem(url: url, type: .pdf)
         }
     }
     
     private func exportSessionAsCSV() {
         if let url = ExportManager.exportSessionToCSV(session: session, passers: passers) {
-            shareURL = url
-            showingShareSheet = true
+            shareItem = ShareItem(url: url, type: .csv)
         }
     }
     
@@ -188,7 +183,16 @@ struct SessionDetailView: View {
                 .foregroundStyle(.secondary)
             
             ForEach(playerStats.sorted(by: { $0.average > $1.average })) { stat in
-                PlayerPerformanceRow(stat: stat)
+                if let player = passers.first(where: { $0.id == stat.playerId }) {
+                    NavigationLink {
+                        PlayerSessionDetailView(player: player, session: session)
+                    } label: {
+                        PlayerPerformanceRow(stat: stat)
+                    }
+                    .buttonStyle(.plain)
+                } else {
+                    PlayerPerformanceRow(stat: stat)
+                }
             }
         }
     }
@@ -463,7 +467,7 @@ struct ZoneCell: View {
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             } else {
-                Text("—")
+                Text("Ã¢â‚¬â€")
                     .font(.title2)
                     .foregroundStyle(.secondary)
                 
@@ -507,7 +511,7 @@ struct ZoneDetailRow: View {
                     .font(.subheadline)
                     .frame(width: 80, alignment: .leading)
                 
-                Text("—")
+                Text("Ã¢â‚¬â€")
                     .foregroundStyle(.secondary)
                 
                 Text("\(stats.count) passes")
@@ -609,7 +613,7 @@ struct BodyContactCell: View {
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             } else {
-                Text("—")
+                Text("Ã¢â‚¬â€")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -833,6 +837,10 @@ struct PlayerPerformanceRow: View {
                 .font(.title3)
                 .fontWeight(.bold)
                 .foregroundStyle(averageColor(stat.average))
+            
+            Image(systemName: "chevron.right")
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
         .padding()
         .background(Color(.secondarySystemBackground))

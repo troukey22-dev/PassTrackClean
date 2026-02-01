@@ -260,6 +260,7 @@ struct TeamCard: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 46, height: 46)
+                        .offset(y: 2)
                 }
                 .shadow(color: .black.opacity(0.1), radius: 4, y: 2)
             
@@ -340,7 +341,7 @@ struct SessionRow: View {
                         .fontWeight(.semibold)
                         .foregroundStyle(.primary)
                     
-                    Text("â€¢")
+                    Text("•")
                         .foregroundStyle(.secondary)
                     
                     Text(session.startTime, style: .date)
@@ -353,7 +354,7 @@ struct SessionRow: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                     
-                    Text("â€¢")
+                    Text("•")
                         .foregroundStyle(.secondary)
                     
                     Text(String(format: "%.1f avg", session.teamAverage))

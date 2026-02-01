@@ -99,7 +99,7 @@ struct SettingsView: View {
                 } header: {
                     Text("About")
                 } footer: {
-                    Text("PassTrack - Made for coaches who love data")
+                    Text("PerfectPass - Made for coaches who love data")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
