@@ -167,10 +167,10 @@ struct TeamQuickStartView: View {
         }
         
         var body: some View {
-            let _ = print("Ã°Å¸â€Â SessionConfigurationFlow rendering")
-            let _ = print("Ã°Å¸â€Â Team: \(team.name)")
-            let _ = print("Ã°Å¸â€Â Players count: \(team.players.count)")
-            let _ = print("Ã°Å¸â€Â Active players: \(team.activePlayers.count)")
+            let _ = print(" SessionConfigurationFlow rendering")
+            let _ = print(" Team: \(team.name)")
+            let _ = print(" Players count: \(team.players.count)")
+            let _ = print(" Active players: \(team.activePlayers.count)")
             
             NavigationStack {
                 Group {
@@ -314,7 +314,7 @@ struct TeamQuickStartView: View {
                         FieldSelectionCard(
                             title: "Zone",
                             description: zoneDescription,
-                            icon: "square.grid.3x3",
+                            icon: "square.grid.3x2",
                             isSelected: enabledFields.contains("zone")
                         ) {
                             toggleField("zone")
@@ -341,7 +341,7 @@ struct TeamQuickStartView: View {
                         FieldSelectionCard(
                             title: "Serve Type",
                             description: "Float or Spin serve",
-                            icon: "arrow.up.circle",
+                            icon: "bolt.horizontal",
                             isSelected: enabledFields.contains("serveType")
                         ) {
                             toggleField("serveType")
@@ -482,7 +482,7 @@ struct TeamQuickStartView: View {
                         Image("headband-\(team.mascotColor)")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 46, height: 46)
+                            .frame(width: 50, height: 50)
                             .offset(y: 2)
                     }
                     .shadow(color: .black.opacity(0.1), radius: 4, y: 2)

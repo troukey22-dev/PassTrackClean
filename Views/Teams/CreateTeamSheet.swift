@@ -90,7 +90,7 @@ struct CreateTeamSheet: View {
                     .opacity(0)
                 }
                 .padding(.horizontal)
-                .padding(.top, 8)
+                .padding(.top, 20)
                 .padding(.bottom, 12)
                 .background(Color(.systemGroupedBackground))
                 
@@ -316,7 +316,7 @@ struct CreateTeamSheet: View {
         }
     }
     
-    // MARK: - Step 3: Customize Colors (NEW!)
+    // MARK: - Step 3: Customize Colors
     private var customizeColorsStep: some View {
         VStack(spacing: 0) {
             // Mascot header
@@ -363,10 +363,9 @@ struct CreateTeamSheet: View {
                             .overlay {
                                 Image("headband-\(selectedMascotColor)")
                                     .resizable()
-                                    .scaledToFill()
+                                    .scaledToFit()
                                     .frame(width: 120, height: 120)
-                                    .scaleEffect(1.5)
-                                    .offset(y: 12)
+                                    .offset(y: 2)
                             }
                             .clipShape(Circle())
                             .shadow(color: .black.opacity(0.1), radius: 8, y: 4)
@@ -392,7 +391,7 @@ struct CreateTeamSheet: View {
                                             Image("headband-\(color)")
                                                 .resizable()
                                                 .scaledToFit()
-                                                .frame(width: 60, height: 60)
+                                                .frame(width: 50, height: 50)
                                                 .overlay(
                                                     Circle()
                                                         .stroke(selectedMascotColor == color ? Color(red: 0.545, green: 0.361, blue: 0.965) : Color.clear, lineWidth: 3)

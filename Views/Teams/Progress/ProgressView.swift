@@ -259,7 +259,7 @@ struct TeamCard: View {
                     Image("headband-\(team.mascotColor)")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 46, height: 46)
+                        .frame(width: 50, height: 50)
                         .offset(y: 2)
                 }
                 .shadow(color: .black.opacity(0.1), radius: 4, y: 2)
