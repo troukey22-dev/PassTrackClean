@@ -29,7 +29,7 @@
 - ❌ **You MAY NOT:** Use this code in commercial projects
 - ❌ **You MAY NOT:** Create derivative works
 
-**Copyright © 2026 Tyler Roukey]. All Rights Reserved.**
+**Copyright © 2026 Tyler Roukey. All Rights Reserved.**
 
 **Developer:** Tyler Roukey  
 **Email:** perfectpassapphelp@gmail.com  
